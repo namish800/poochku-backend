@@ -1,9 +1,5 @@
 package com.puchku.pet.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.puchku.pet.model.entities.User;
-import jakarta.persistence.*;
-
 public class AddDogRequestDto {
     private long dogId;
     private long userId;

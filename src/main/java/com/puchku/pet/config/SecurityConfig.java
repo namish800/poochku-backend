@@ -1,6 +1,6 @@
 package com.puchku.pet.config;
 
-//import com.puchku.pet.authentication.JwtAuthenticationFilter;
+import com.puchku.pet.authentication.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,23 +21,23 @@ public class SecurityConfig{
     @Autowired
     private UserDetailsService userDetailsService;
 
-//    @Autowired
-//    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http.csrf().disable().authorizeHttpRequests()
-////                .requestMatchers("/auth/login","/user/register","/swagger-ui/**", "/v3/api-docs/**","/dogs/**").permitAll()
-////                .anyRequest().authenticated()
-//                .and()
-//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-//        return http.build();
-//    }
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf().disable().authorizeHttpRequests()
+                .requestMatchers("/auth/login","/user/register","/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
 
     @Bean
     public AuthenticationManager authenticationManagerBean(HttpSecurity http) throws Exception {

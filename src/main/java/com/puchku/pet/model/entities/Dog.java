@@ -17,6 +17,7 @@ public class Dog {
     @JoinColumn(name = "user_id", referencedColumnName="user_id")
     @JsonIgnore
     private User user;
+
     @Column(name = "breed")
     private String breed;
 

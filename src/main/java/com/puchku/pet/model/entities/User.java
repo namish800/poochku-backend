@@ -1,5 +1,4 @@
 package com.puchku.pet.model.entities;
-import com.puchku.pet.model.entities.Dog;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -36,6 +35,10 @@ public class User {
 
     @Column(name = "last_login")
     private Date lastLogin;
+
+    @Column(name = "phone_no")
+    private String phoneNo;
+
 
     @OneToMany(mappedBy="user")
     private List<Dog> dogList;
@@ -120,9 +123,17 @@ public class User {
         this.lastLogin = lastLogin;
     }
 
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
+
     @Override
     public String toString() {
-        return "User{" +
+        return "UserEntity{" +
                 "userId=" + userId +
                 ", fName='" + fName + '\'' +
                 ", mName='" + mName + '\'' +
@@ -132,6 +143,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", crtTs=" + crtTs +
                 ", lastLogin=" + lastLogin +
+                ", phoneNo='" + phoneNo +
                 '}';
     }
 }

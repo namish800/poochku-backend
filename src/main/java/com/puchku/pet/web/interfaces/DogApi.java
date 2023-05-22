@@ -22,8 +22,8 @@ public interface DogApi {
     ResponseEntity<Object> updateDog(@PathVariable("dog_id") Long dogId, @RequestBody Dog dog);
 
     @DeleteMapping("/{dog_id}")
-    public ResponseEntity<Object> deleteDog(@PathVariable("dog_id") Long dogId);
+    ResponseEntity<Object> deleteDog(@PathVariable("dog_id") Long dogId);
 
     @PostMapping("/addService")
-    public ResponseEntity<Object> addService(@RequestBody Service service);
+    ResponseEntity<Object> addService(@RequestBody Service service);
 }

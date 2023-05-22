@@ -1,0 +1,79 @@
+
+plugins {
+	id 'java'
+	id 'io.spring.dependency-management' version '1.1.0'
+	id 'org.openapi.generator' version '6.6.0'
+	id 'org.springframework.boot' version '3.0.0'
+}
+apply plugin: 'java'
+group = 'com.puchku'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-quartz'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.session:spring-session-core'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'org.postgresql:postgresql'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+	testImplementation 'org.springframework.amqp:spring-rabbit-test'
+	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.0"
+	implementation "org.springframework.boot:spring-boot-starter-validation"
+	implementation "org.springframework.boot:spring-boot-starter-security"
+	implementation "io.jsonwebtoken:jjwt-api:0.11.5"
+	implementation "org.openapitools:jackson-databind-nullable:0.2.6"
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+openApiGenerate {
+	generatorName = 'spring'
+	inputSpec = file('src/main/resources/poochku.yaml').path
+	apiPackage = 'com.puchku.pet.api'
+	modelPackage = 'com.puchku.pet.model'
+	configOptions = [
+			dateLibrary: 'java17',
+			delegatePattern: 'false',
+			interfaceOnly: 'true',
+			useBeanValidation: 'true',
+			useSpringBoot3: 'true'
+	]
+}
+
+tasks.register('generateOpenApi') {
+	dependsOn 'openApiGenerate'
+	description = 'Generate OpenAPI specs'
+	group = 'build'
+	inputs.files openApiGenerate.inputSpec
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs += "${buildDir}/generate-resources"
+		}
+	}
+}
+
+
+compileJava.dependsOn generateOpenApi

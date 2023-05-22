@@ -16,7 +16,7 @@ public class Dog {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName="user_id")
     @JsonIgnore
-    private User user;
+    private UserEntity user;
 
     @Column(name = "breed")
     private String breed;
@@ -71,12 +71,12 @@ public class Dog {
         this.description = description;
     }
 
-    public User getUser() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(UserEntity userEntity) {
+        this.user = userEntity;
     }
 
     @Override

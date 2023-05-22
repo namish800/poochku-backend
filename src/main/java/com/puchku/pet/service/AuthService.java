@@ -5,7 +5,7 @@ import com.puchku.pet.exceptions.BadRequestException;
 import com.puchku.pet.exceptions.NotFoundException;
 import com.puchku.pet.model.LoginRequestDto;
 import com.puchku.pet.model.LoginSuccessResponseDto;
-import com.puchku.pet.model.entities.User;
+import com.puchku.pet.model.entities.UserEntity;
 import com.puchku.pet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,7 @@ public class AuthService {
         if(loginRequest==null || loginRequest.getPassword()==null || loginRequest.getUsername()==null){
             throw new BadRequestException("Bad request");
         }
-        Optional<User> user = userRepository.findByPhoneNo(loginRequest.getUsername());
+        Optional<UserEntity> user = userRepository.findByPhoneNo(loginRequest.getUsername());
         if(user.isEmpty()){
             throw new NotFoundException("User not found");
         }

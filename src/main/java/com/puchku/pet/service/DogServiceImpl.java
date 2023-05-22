@@ -4,7 +4,7 @@ import com.puchku.pet.exceptions.NotFoundException;
 import com.puchku.pet.model.AddDogRequestDto;
 import com.puchku.pet.model.entities.Dog;
 import com.puchku.pet.model.entities.DogService;
-import com.puchku.pet.model.entities.User;
+import com.puchku.pet.model.entities.UserEntity;
 import com.puchku.pet.repository.DogRepository;
 import com.puchku.pet.repository.DogServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,9 +57,9 @@ public class DogServiceImpl {
         dogEntity.setBreed(dog.getBreed());
         dogEntity.setName(dog.getName());
         dogEntity.setDescription(dog.getDescription());
-        User user = new User();
-        user.setUserId(dog.getUserId());
-        dogEntity.setUser(user);
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUserId(dog.getUserId());
+        dogEntity.setUser(userEntity);
         return dogEntity;
     }
 

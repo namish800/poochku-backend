@@ -1,7 +1,7 @@
 package com.puchku.pet.authentication;
 
 import com.puchku.pet.exceptions.NotFoundException;
-import com.puchku.pet.model.entities.User;
+import com.puchku.pet.model.entities.UserEntity;
 import com.puchku.pet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,11 +19,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> userEntity = userRepository.findByPhoneNo(username);
+        Optional<UserEntity> userEntity = userRepository.findByPhoneNo(username);
         if (userEntity.isEmpty()) {
             throw new NotFoundException("User not found with username: " + username);
         }
-        User user = userEntity.get();
+        UserEntity user = userEntity.get();
         // Create a UserDetails object based on your User entity
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getPhoneNo())

@@ -1,7 +1,7 @@
 package com.puchku.pet.web.interfaces;
 
 import com.puchku.pet.model.AddDogRequestDto;
-import com.puchku.pet.model.entities.Dog;
+import com.puchku.pet.model.entities.PetEntity;
 import com.puchku.pet.model.entities.Service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/dogs")
 public interface DogApi {
     @GetMapping("/{dogId}")
-    ResponseEntity<Dog> getDogDetails(@PathVariable long dogId);
+    ResponseEntity<PetEntity> getDogDetails(@PathVariable long dogId);
 
     @GetMapping
     ResponseEntity<Object> getDogByService(@RequestParam(required = false) String service, @RequestParam(required = false) Long userId);
@@ -19,7 +19,7 @@ public interface DogApi {
     ResponseEntity<Object> addDog(@RequestBody AddDogRequestDto dog);
 
     @PutMapping("/{dog_id}")
-    ResponseEntity<Object> updateDog(@PathVariable("dog_id") Long dogId, @RequestBody Dog dog);
+    ResponseEntity<Object> updateDog(@PathVariable("dog_id") Long dogId, @RequestBody PetEntity petEntity);
 
     @DeleteMapping("/{dog_id}")
     ResponseEntity<Object> deleteDog(@PathVariable("dog_id") Long dogId);

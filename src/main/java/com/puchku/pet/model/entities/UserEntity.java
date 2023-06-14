@@ -41,14 +41,14 @@ public class UserEntity {
 
 
     @OneToMany(mappedBy="user")
-    private List<Dog> dogList;
+    private List<PetEntity> petEntityList;
 
-    public List<Dog> getDogList() {
-        return dogList;
+    public List<PetEntity> getDogList() {
+        return petEntityList;
     }
 
-    public void setDogList(List<Dog> dogList) {
-        this.dogList = dogList;
+    public void setDogList(List<PetEntity> petEntityList) {
+        this.petEntityList = petEntityList;
     }
 
     public long getUserId() {

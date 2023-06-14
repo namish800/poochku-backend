@@ -1,19 +1,18 @@
 package com.puchku.pet.model.entities;
-import com.puchku.pet.model.entities.Dog;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "dog_service", schema="public")
-public class DogService {
+@Table(name = "pet_service", schema="public")
+public class PetServiceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "dog_service_id")
-    private long dogServiceId;
+    @Column(name = "pet_service_id")
+    private long petServiceId;
 
     @ManyToOne
-    @JoinColumn(name = "dog_id", referencedColumnName="dog_id")
-    private Dog dog;
+    @JoinColumn(name = "pet_id", referencedColumnName="pet_id")
+    private PetEntity petEntity;
 
     @Column(name = "service_name")
     private String serviceName;
@@ -38,20 +37,20 @@ public class DogService {
         this.serviceCode = serviceCode;
     }
 
-    public long getDogServiceId() {
-        return dogServiceId;
+    public long getPetServiceId() {
+        return petServiceId;
     }
 
-    public void setDogServiceId(long dogServiceId) {
-        this.dogServiceId = dogServiceId;
+    public void setPetServiceId(long petServiceId) {
+        this.petServiceId = petServiceId;
     }
 
-    public Dog getDog() {
-        return dog;
+    public PetEntity getPetEntity() {
+        return petEntity;
     }
 
-    public void setDog(Dog dog) {
-        this.dog = dog;
+    public void setPetEntity(PetEntity petEntity) {
+        this.petEntity = petEntity;
     }
 
 }

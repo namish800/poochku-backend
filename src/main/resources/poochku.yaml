@@ -81,13 +81,108 @@ paths:
           description: Not Found
         '400':
           description: Bad Request. Missing required parameters
+  /pet/{petId}:
+    get:
+      summary: Retrieve Pet details
+      operationId: requestPetInfo
+      parameters:
+        - name: petId
+          in: path
+          description: ID of Pet in Database
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Pet Details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '404':
+          description: Not Found
+        '400':
+          description: Bad Request. Missing required parameters
+    put:
+      summary: Update pet details
+      operationId: updatePetDetails
+      parameters:
+        - name: petId
+          in: path
+          description: ID of Pet in Database
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Pet Details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '404':
+          description: Not Found
+        '400':
+          description: Bad Request. Missing required parameters
+    delete:
+      summary: Delete a Pet
+      operationId: deletePetDetails
+      parameters:
+        - name: petId
+          in: path
+          description: ID of Pet in Database
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Pet deleted
+        '404':
+          description: Not Found
+        '400':
+          description: Bad Request. Missing required parameters
+  /pet:
+    get:
+      summary: Get Pet list for a service
+      operationId: getPetByService
+      parameters:
+        - name: serviceCode
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: 'The page number (default: 0)'
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description:
+           'The number of items per page (default: 10)'
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: List of Pets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPetResponseDto'
+        '404':
+          description: Not Found
+        '400':
+          description: Bad Request. Missing required parameters
+
 components:
   schemas:
     User:
       type: object
       properties:
         userId:
-          type: integer
+          type: long
         fName:
           type: string
         lName:
@@ -98,16 +193,16 @@ components:
           type: string
         phoneNo:
           type: string
-        petList:
-          type: array
-          items:
-            $ref: '#/components/schemas/Pet'
+#        petList:
+#          type: array
+#          items:
+#            $ref: '#/components/schemas/Pet'
 
     Pet:
       type: object
       properties:
         petId:
-          type: integer
+          type: long
         name:
           type: string
         petType:
@@ -116,14 +211,26 @@ components:
           type: string
         description:
           type: string
+        age:
+          type: integer
+        status:
+          type: string
+        motherBreed:
+          type: string
+        fatherBreed:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
         service:
-          $ref: '#/components/schemas/Service'
+          type: array
+          items:
+            $ref: '#/components/schemas/PetService'
 
-    Service:
+    PetService:
       type: object
       properties:
         serviceId:
-          type: integer
+          type: long
         serviceName:
           type: string
         serviceCode:
@@ -154,3 +261,19 @@ components:
           type: string
         uuid:
           type: string
+
+    PaginatedPetResponseDto:
+      type: object
+      properties:
+        currentPage:
+          type: int
+        totalPages:
+          type:
+            int
+        totalItems:
+          type:
+            long
+        pets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pet'

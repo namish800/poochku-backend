@@ -2,8 +2,7 @@ package com.puchku.pet.service;
 
 import com.puchku.pet.exceptions.BadRequestException;
 import com.puchku.pet.exceptions.NotFoundException;
-import com.puchku.pet.model.*;
-import com.puchku.pet.model.ListPetResponseDto;
+import com.puchku.pet.model.CreateNewPetReqDto;
 import com.puchku.pet.model.PaginatedPetResponseDto;
 import com.puchku.pet.model.Pet;
 import com.puchku.pet.model.PetService;
@@ -13,6 +12,8 @@ import com.puchku.pet.model.entities.PetServiceEntity;
 import com.puchku.pet.model.entities.UserEntity;
 import com.puchku.pet.repository.PetRepository;
 import com.puchku.pet.repository.DogServiceRepository;
+import com.puchku.pet.repository.PetServiceRepository;
+import com.puchku.pet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,10 +36,15 @@ public class PetServiceImpl {
     @Autowired
     private DogServiceRepository dogServiceRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PetServiceRepository petServiceRepository;
+
     public ResponseEntity<Pet> requestPetInfo(long petId) {
         PetEntity petEntity = petRepository.findByPetId(petId)
                 .orElseThrow(() -> new NotFoundException("Pet not found with ID: " + petId));
-        System.out.println(petEntity);
         Pet response = mapPetEntitytoPetResponse(petEntity);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -55,11 +62,11 @@ public class PetServiceImpl {
         petResponse.setMotherBreed(petResponse.getMotherBreed());
         User user = mapUserEntityToUser(petEntity.getUser());
         petResponse.setUser(user);
-        List<PetService> serviceList = petEntity.getServiceList()
-                .stream()
-                .map(this::mapPetServiceEntityToPetService)
-                .toList();
-        petResponse.setService(serviceList);
+//        List<PetService> serviceList = petEntity.getServiceList()
+//                .stream()
+//                .map(this::mapPetServiceEntityToPetService)
+//                .toList();
+        petResponse.setService(mapPetServiceEntityToPetService(petEntity.getService()));
         return petResponse;
     }
 
@@ -102,6 +109,43 @@ public class PetServiceImpl {
         response.setPets(petList);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    public ResponseEntity<CreateNewPetReqDto> createNewPet(CreateNewPetReqDto petReqDto) {
+        if(petReqDto!=null && petReqDto.getOwnerId()==0 && petReqDto.getOwnerId()==null){
+            throw new BadRequestException("Missing required owner id");
+        }
+        if(petReqDto!=null) {
+            //add new pet in db
+            PetEntity petEntity = mapPetReqDtoToPetEntity(petReqDto);
+            petEntity = petRepository.save(petEntity);
+            petReqDto.setPetId(petEntity.getPetId());
+
+            //add the service for the pet based on service code
+            PetServiceEntity petServiceEntity = new PetServiceEntity();
+            petServiceEntity.setPetEntity(petEntity);
+            petServiceEntity.setServiceCode(petReqDto.getServiceCode());
+            petServiceEntity.setServiceName("SELL");
+            petServiceRepository.save(petServiceEntity);
+        }
+        return new ResponseEntity<>(petReqDto, HttpStatus.OK);
+    }
+
+    private PetEntity mapPetReqDtoToPetEntity(CreateNewPetReqDto petReqDto) {
+        PetEntity petEntity = new PetEntity();
+        Optional<UserEntity> userEntity = userRepository.findByUserId(petReqDto.getOwnerId());
+        if(userEntity.isEmpty()){ throw new BadRequestException("User does not Exist");}
+        petEntity.setUser(userEntity.get());
+        petEntity.setBreed(petReqDto.getBreed());
+        petEntity.setName(petReqDto.getName());
+        petEntity.setDescription(petReqDto.getDescription());
+        petEntity.setPetType(petReqDto.getPetType());
+        petEntity.setAge(petReqDto.getAgeInDays());
+        petEntity.setPetStatus("ACTIVE");
+        petEntity.setFatherBreed(petReqDto.getFatherBreed());
+        petEntity.setMotherBreed(petReqDto.getMotherBreed());
+        petEntity.setVaccStatus(petReqDto.getVaccinationStatus());
+        return petEntity;
     }
 
 

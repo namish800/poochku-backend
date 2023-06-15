@@ -10,7 +10,7 @@ public class PetServiceEntity {
     @Column(name = "pet_service_id")
     private long petServiceId;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "pet_id", referencedColumnName="pet_id")
     private PetEntity petEntity;
 

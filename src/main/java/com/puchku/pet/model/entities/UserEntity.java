@@ -39,7 +39,6 @@ public class UserEntity {
     @Column(name = "phone_no")
     private String phoneNo;
 
-
     @OneToMany(mappedBy="user")
     private List<PetEntity> petEntityList;
 

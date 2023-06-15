@@ -175,6 +175,26 @@ paths:
           description: Not Found
         '400':
           description: Bad Request. Missing required parameters
+    post:
+      summary: Add a new pet for a seller
+      operationId: addNewPet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNewPetReqDto'
+      responses:
+        '200':
+          description: New Pet Added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateNewPetReqDto'
+        '400':
+          description: Bad request. Missing required parameters
+        '500':
+          description: Internal Server Error
 
 components:
   schemas:
@@ -193,11 +213,26 @@ components:
           type: string
         phoneNo:
           type: string
-#        petList:
-#          type: array
-#          items:
-#            $ref: '#/components/schemas/Pet'
 
+    UserResponseDto:
+      type: object
+      properties:
+        userId:
+          type: long
+        fName:
+          type: string
+        lName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        phoneNo:
+          type: string
+        petList:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pet'
     Pet:
       type: object
       properties:
@@ -209,6 +244,8 @@ components:
           type: string
         breed:
           type: string
+        vaccination_status:
+          type: boolean
         description:
           type: string
         age:
@@ -222,9 +259,7 @@ components:
         user:
           $ref: '#/components/schemas/User'
         service:
-          type: array
-          items:
-            $ref: '#/components/schemas/PetService'
+          $ref: '#/components/schemas/PetService'
 
     PetService:
       type: object
@@ -277,3 +312,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Pet'
+
+    CreateNewPetReqDto:
+      type: object
+      properties:
+        petId:
+          type: long
+        ownerId:
+          type: long
+        name:
+          type: string
+        petType:
+          type: string
+        breed:
+          type: string
+        vaccination_status:
+          type: boolean
+        description:
+          type: string
+        ageInDays:
+          type: integer
+        motherBreed:
+          type: string
+        fatherBreed:
+          type: string
+        serviceCode:
+          type: string

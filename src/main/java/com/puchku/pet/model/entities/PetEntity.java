@@ -3,7 +3,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.sql.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "pet", schema="public")
@@ -46,16 +45,19 @@ public class PetEntity {
     @Column(name = "crt_ts")
     private Date crtTs;
 
-    @OneToMany(mappedBy="petEntity")
+    @OneToOne(mappedBy="petEntity")
     @JsonIgnore
-    private List<PetServiceEntity> serviceList;
+    private PetServiceEntity service;
 
-    public List<PetServiceEntity> getServiceList() {
-        return serviceList;
+    @Column(name = "vaccination_status")
+    private Boolean vaccStatus;
+
+    public PetServiceEntity getService() {
+        return service;
     }
 
-    public void setServiceList(List<PetServiceEntity> serviceList) {
-        this.serviceList = serviceList;
+    public void setService(PetServiceEntity service) {
+        this.service = service;
     }
 
     public long getPetId() {
@@ -146,6 +148,14 @@ public class PetEntity {
         this.crtTs = crtTs;
     }
 
+    public Boolean getVaccStatus() {
+        return vaccStatus;
+    }
+
+    public void setVaccStatus(Boolean vaccStatus) {
+        this.vaccStatus = vaccStatus;
+    }
+
     @Override
     public String toString() {
         return "PetEntity{" +
@@ -160,7 +170,7 @@ public class PetEntity {
                 ", fatherBreed='" + fatherBreed + '\'' +
                 ", motherBreed='" + motherBreed + '\'' +
                 ", crtTs=" + crtTs +
-                ", serviceList=" + serviceList +
+                ", service=" + service +
                 '}';
     }
 

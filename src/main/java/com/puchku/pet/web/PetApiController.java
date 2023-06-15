@@ -1,5 +1,6 @@
 package com.puchku.pet.web;
 
+import com.puchku.pet.model.CreateNewPetReqDto;
 import com.puchku.pet.model.ListPetResponseDto;
 import com.puchku.pet.model.PaginatedPetResponseDto;
 import com.puchku.pet.model.Pet;
@@ -13,6 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class PetApiController implements com.puchku.pet.api.PetApi {
     @Autowired
     private PetServiceImpl petService;
+
+
+    @Override
+    public ResponseEntity<CreateNewPetReqDto> addNewPet(CreateNewPetReqDto petReqDto) {
+        return petService.createNewPet(petReqDto);
+    }
 
     @Override
     public ResponseEntity<Void> deletePetDetails(Integer petId) {

@@ -1,7 +1,6 @@
 package com.puchku.pet.web;
 
 import com.puchku.pet.model.CreateNewPetReqDto;
-import com.puchku.pet.model.ListPetResponseDto;
 import com.puchku.pet.model.PaginatedPetResponseDto;
 import com.puchku.pet.model.Pet;
 import com.puchku.pet.service.PetServiceImpl;

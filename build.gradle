@@ -79,5 +79,8 @@ sourceSets {
 	}
 }
 
+jar {
+	enabled = false
+}
 
 compileJava.dependsOn generateOpenApi

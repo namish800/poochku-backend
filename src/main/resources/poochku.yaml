@@ -315,6 +315,8 @@ components:
           type: string
         quality:
           type: string
+        gender:
+          type: string
         user:
           $ref: '#/components/schemas/User'
         service:
@@ -402,4 +404,6 @@ components:
         location:
           type: string
         quality:
+          type: string
+        price:
           type: string

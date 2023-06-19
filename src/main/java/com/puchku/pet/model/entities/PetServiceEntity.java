@@ -21,7 +21,7 @@ public class PetServiceEntity {
     private String serviceCode;
 
     @Column(name = "price")
-    private int price;
+    private Integer price;
 
 
     public String getServiceName() {
@@ -56,11 +56,11 @@ public class PetServiceEntity {
         this.petEntity = petEntity;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 }

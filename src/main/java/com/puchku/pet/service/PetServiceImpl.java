@@ -64,6 +64,7 @@ public class PetServiceImpl {
         petResponse.setMotherBreed(petEntity.getMotherBreed());
         petResponse.setLocation(petEntity.getLocation());
         petResponse.setQuality(petEntity.getQuality());
+        petResponse.setGender(petEntity.getGender());
         User user = mapUserEntityToUser(petEntity.getUser());
         petResponse.setUser(user);
 //        List<PetService> serviceList = petEntity.getServiceList()
@@ -157,13 +158,8 @@ public class PetServiceImpl {
                                                                   String gender, String quality, Integer page,
                                                                   Integer size) {
         Specification<PetEntity> spec = Specification.where(null);
+        List<PetEntity> petEntityList = new ArrayList<>();
 
-        if (serviceCode != null) {
-            spec = spec.and((root, query, criteriaBuilder) -> {
-                Join<PetEntity, PetServiceEntity> join = root.join("pet_id");
-                return criteriaBuilder.equal(join.get("serviceCode"), serviceCode);
-            });
-        }
         if (location != null) {
             spec = spec.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("location"), location));
@@ -171,20 +167,33 @@ public class PetServiceImpl {
 
         if (breed != null) {
             spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("breed"), breed));
+                    criteriaBuilder.equal(criteriaBuilder.lower(root.get("breed")), breed.toLowerCase()));
         }
         if (gender != null) {
             spec = spec.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("gender"), gender));
         }
-        if (breed != null) {
+        if (quality != null) {
             spec = spec.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("quality"), quality));
         }
 
 //        // Executing the query
-//        List<YourEntity> results = entityRepository.findAll(spec);
-        return null;
+        Pageable pageable = PageRequest.of(page, size);
+        Page<PetEntity> petEntityPage = petRepository.findAll(spec, pageable);
+        petEntityList = petEntityPage.getContent();
+        if (petEntityList.isEmpty()) {
+            throw new NotFoundException("No Pets Found");
+        }
+        // creating the response
+        PaginatedPetResponseDto response = new PaginatedPetResponseDto();
+        List<Pet> petList = petEntityList.stream().map(this::mapPetEntitytoPetResponse).collect(Collectors.toList());
+        response.setCurrentPage(page);
+        response.setTotalItems(petEntityPage.getTotalElements());
+        response.setTotalPages(petEntityPage.getTotalPages());
+        response.setPets(petList);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
 

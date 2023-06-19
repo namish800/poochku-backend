@@ -58,6 +58,9 @@ public class PetEntity {
     @Column(name = "quality")
     private String quality;
 
+    @Column(name = "gender")
+    private String gender;
+
     public PetServiceEntity getService() {
         return service;
     }
@@ -176,6 +179,14 @@ public class PetEntity {
 
     public void setQuality(String quality) {
         this.quality = quality;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     @Override

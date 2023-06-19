@@ -20,6 +20,9 @@ public class PetServiceEntity {
     @Column(name = "service_code")
     private String serviceCode;
 
+    @Column(name = "price")
+    private int price;
+
 
     public String getServiceName() {
         return serviceName;
@@ -53,4 +56,11 @@ public class PetServiceEntity {
         this.petEntity = petEntity;
     }
 
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
 }

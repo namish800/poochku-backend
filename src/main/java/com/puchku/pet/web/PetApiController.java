@@ -26,6 +26,11 @@ public class PetApiController implements com.puchku.pet.api.PetApi {
     }
 
     @Override
+    public ResponseEntity<PaginatedPetResponseDto> getPetByParams(String serviceCode, String location, String breed, String gender, String quality, Integer page, Integer size) {
+        return petService.getPetByParams(serviceCode, location, breed, gender, quality, page, size);
+    }
+
+    @Override
     public ResponseEntity<PaginatedPetResponseDto> getPetByService(String serviceCode, Integer page, Integer size) {
         return petService.getPetByService(serviceCode, page, size);
     }

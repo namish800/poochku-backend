@@ -196,6 +196,61 @@ paths:
         '500':
           description: Internal Server Error
 
+  /pet/search:
+    get:
+      summary: Search for pets with params
+      operationId: getPetByParams
+      parameters:
+        - name: serviceCode
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: location
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: breed
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: gender
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: quality
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: 'The page number (default: 0)'
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description:
+            'The number of items per page (default: 10)'
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: List of Pets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPetResponseDto'
+        '404':
+          description: Not Found
+        '400':
+          description: Bad Request. Missing required parameters
+
 components:
   schemas:
     User:
@@ -256,6 +311,10 @@ components:
           type: string
         fatherBreed:
           type: string
+        location:
+          type: string
+        quality:
+          type: string
         user:
           $ref: '#/components/schemas/User'
         service:
@@ -270,6 +329,8 @@ components:
           type: string
         serviceCode:
           type: string
+        price:
+          type: integer
 
     LoginRequestDto:
       type: object
@@ -337,4 +398,8 @@ components:
         fatherBreed:
           type: string
         serviceCode:
+          type: string
+        location:
+          type: string
+        quality:
           type: string

@@ -14,10 +14,12 @@ import com.puchku.pet.repository.PetRepository;
 import com.puchku.pet.repository.DogServiceRepository;
 import com.puchku.pet.repository.PetServiceRepository;
 import com.puchku.pet.repository.UserRepository;
+import jakarta.persistence.criteria.Join;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -59,7 +61,9 @@ public class PetServiceImpl {
         petResponse.setDescription(petEntity.getDescription());
         petResponse.setStatus(petEntity.getPetStatus());
         petResponse.setFatherBreed(petEntity.getFatherBreed());
-        petResponse.setMotherBreed(petResponse.getMotherBreed());
+        petResponse.setMotherBreed(petEntity.getMotherBreed());
+        petResponse.setLocation(petEntity.getLocation());
+        petResponse.setQuality(petEntity.getQuality());
         User user = mapUserEntityToUser(petEntity.getUser());
         petResponse.setUser(user);
 //        List<PetService> serviceList = petEntity.getServiceList()
@@ -75,6 +79,7 @@ public class PetServiceImpl {
         petService.setServiceId(petServiceEntity.getPetServiceId());
         petService.setServiceCode(petServiceEntity.getServiceCode());
         petService.setServiceName(petServiceEntity.getServiceName());
+        petService.setPrice(petServiceEntity.getPrice());
         return petService;
     }
 
@@ -146,6 +151,40 @@ public class PetServiceImpl {
         petEntity.setMotherBreed(petReqDto.getMotherBreed());
         petEntity.setVaccStatus(petReqDto.getVaccinationStatus());
         return petEntity;
+    }
+
+    public ResponseEntity<PaginatedPetResponseDto> getPetByParams(String serviceCode, String location, String breed,
+                                                                  String gender, String quality, Integer page,
+                                                                  Integer size) {
+        Specification<PetEntity> spec = Specification.where(null);
+
+        if (serviceCode != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> {
+                Join<PetEntity, PetServiceEntity> join = root.join("pet_id");
+                return criteriaBuilder.equal(join.get("serviceCode"), serviceCode);
+            });
+        }
+        if (location != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("location"), location));
+        }
+
+        if (breed != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("breed"), breed));
+        }
+        if (gender != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("gender"), gender));
+        }
+        if (breed != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("quality"), quality));
+        }
+
+//        // Executing the query
+//        List<YourEntity> results = entityRepository.findAll(spec);
+        return null;
     }
 
 

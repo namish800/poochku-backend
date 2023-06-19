@@ -52,6 +52,12 @@ public class PetEntity {
     @Column(name = "vaccination_status")
     private Boolean vaccStatus;
 
+    @Column(name = "location")
+    private String location;
+
+    @Column(name = "quality")
+    private String quality;
+
     public PetServiceEntity getService() {
         return service;
     }
@@ -154,6 +160,22 @@ public class PetEntity {
 
     public void setVaccStatus(Boolean vaccStatus) {
         this.vaccStatus = vaccStatus;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getQuality() {
+        return quality;
+    }
+
+    public void setQuality(String quality) {
+        this.quality = quality;
     }
 
     @Override

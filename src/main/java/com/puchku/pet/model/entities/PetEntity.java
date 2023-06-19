@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.sql.Date;
 
 @Entity
-@Table(name = "pet", schema="public")
+@Table(name = "pet", schema="poochku")
 public class PetEntity {
 
     @Id

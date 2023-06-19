@@ -2,7 +2,7 @@ package com.puchku.pet.model.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "pet_service", schema="public")
+@Table(name = "pet_service", schema="poochku")
 public class PetServiceEntity {
 
     @Id

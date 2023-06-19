@@ -160,6 +160,12 @@ public class PetServiceImpl {
         Specification<PetEntity> spec = Specification.where(null);
         List<PetEntity> petEntityList = new ArrayList<>();
 
+        if(serviceCode!=null){
+            spec = spec.and((root, query, criteriaBuilder) -> {
+                return criteriaBuilder.equal(root.get("service").get("serviceCode"), serviceCode);
+            });
+        }
+
         if (location != null) {
             spec = spec.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("location"), location));
@@ -196,34 +202,4 @@ public class PetServiceImpl {
 
     }
 
-
-//    public ResponseEntity<Object> addDog(AddDogRequestDto dog) {
-//        System.out.println(dog);
-//        PetEntity petEntityEntity = mapAddDogDtoToDogEntity(dog);
-//        petEntityEntity = dogRepository.save(petEntityEntity);
-//        return new ResponseEntity<>(dog, HttpStatus.OK);
-//    }
-//
-//    private PetEntity mapAddDogDtoToDogEntity(AddDogRequestDto dog) {
-//        PetEntity petEntityEntity = new PetEntity();
-//        petEntityEntity.setDogId(dog.getDogId());
-//        petEntityEntity.setBreed(dog.getBreed());
-//        petEntityEntity.setName(dog.getName());
-//        petEntityEntity.setDescription(dog.getDescription());
-//        UserEntity userEntity = new UserEntity();
-//        userEntity.setUserId(dog.getUserId());
-//        petEntityEntity.setUser(userEntity);
-//        return petEntityEntity;
-//    }
-//
-//    public ResponseEntity<Object> addService(com.puchku.pet.model.entities.Service service) {
-//        PetServiceEntity petServiceEntity = new PetServiceEntity();
-//        PetEntity petEntity = dogRepository.findById(service.getDogId()).get();
-//        petServiceEntity.setDog(petEntity);
-//        petServiceEntity.setServiceCode(service.getServiceCode());
-//        petServiceEntity.setServiceName(service.getServiceCode());
-//
-//        PetServiceEntity petServiceEntityEntity = dogServiceRepository.save(petServiceEntity);
-//        return new ResponseEntity<>(petServiceEntityEntity, HttpStatus.OK);
-//    }
 }

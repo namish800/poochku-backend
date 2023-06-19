@@ -6,15 +6,14 @@ import com.puchku.pet.model.CreateNewPetReqDto;
 import com.puchku.pet.model.PaginatedPetResponseDto;
 import com.puchku.pet.model.Pet;
 import com.puchku.pet.model.PetService;
-import com.puchku.pet.model.User;
+import com.puchku.pet.model.SellerDto;
 import com.puchku.pet.model.entities.PetEntity;
 import com.puchku.pet.model.entities.PetServiceEntity;
-import com.puchku.pet.model.entities.UserEntity;
+import com.puchku.pet.model.entities.SellerEntity;
 import com.puchku.pet.repository.PetRepository;
 import com.puchku.pet.repository.DogServiceRepository;
 import com.puchku.pet.repository.PetServiceRepository;
-import com.puchku.pet.repository.UserRepository;
-import jakarta.persistence.criteria.Join;
+import com.puchku.pet.repository.SellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,7 +38,7 @@ public class PetServiceImpl {
     private DogServiceRepository dogServiceRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private SellerRepository sellerRepository;
 
     @Autowired
     private PetServiceRepository petServiceRepository;
@@ -65,8 +64,8 @@ public class PetServiceImpl {
         petResponse.setLocation(petEntity.getLocation());
         petResponse.setQuality(petEntity.getQuality());
         petResponse.setGender(petEntity.getGender());
-        User user = mapUserEntityToUser(petEntity.getUser());
-        petResponse.setUser(user);
+        SellerDto seller = mapSellerEntitytoSellerDto(petEntity.getSeller());
+        petResponse.setOwner(seller);
 //        List<PetService> serviceList = petEntity.getServiceList()
 //                .stream()
 //                .map(this::mapPetServiceEntityToPetService)
@@ -84,14 +83,14 @@ public class PetServiceImpl {
         return petService;
     }
 
-    private User mapUserEntityToUser(UserEntity userEntity) {
-        User user = new User();
-        user.setUserId(userEntity.getUserId());
-        user.setfName(userEntity.getfName());
-        user.setlName(userEntity.getlName());
-        user.setEmail(userEntity.getEmail());
-        user.setPhoneNo(userEntity.getPhoneNo());
-        return user;
+    private SellerDto mapSellerEntitytoSellerDto(SellerEntity sellerEntity) {
+        SellerDto sellerDto = new SellerDto();
+        sellerDto.setSellerId(sellerEntity.getSellerId());
+        sellerDto.setfName(sellerEntity.getfName());
+        sellerDto.setlName(sellerEntity.getlName());
+        sellerDto.setEmail(sellerEntity.getEmail());
+        sellerDto.setPhoneNo(sellerEntity.getPhoneNo());
+        return sellerDto;
     }
 
     public ResponseEntity<com.puchku.pet.model.PaginatedPetResponseDto> getPetByService(String serviceCode, Integer page, Integer size) {
@@ -139,9 +138,9 @@ public class PetServiceImpl {
 
     private PetEntity mapPetReqDtoToPetEntity(CreateNewPetReqDto petReqDto) {
         PetEntity petEntity = new PetEntity();
-        Optional<UserEntity> userEntity = userRepository.findByUserId(petReqDto.getOwnerId());
-        if(userEntity.isEmpty()){ throw new BadRequestException("User does not Exist");}
-        petEntity.setUser(userEntity.get());
+        Optional<SellerEntity> sellerEntity = sellerRepository.findBySellerId(petReqDto.getOwnerId());
+        if(sellerEntity.isEmpty()){ throw new BadRequestException("User does not Exist");}
+        petEntity.setSeller(sellerEntity.get());
         petEntity.setBreed(petReqDto.getBreed());
         petEntity.setName(petReqDto.getName());
         petEntity.setDescription(petReqDto.getDescription());

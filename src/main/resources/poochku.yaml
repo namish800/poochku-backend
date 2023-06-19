@@ -81,6 +81,45 @@ paths:
           description: Not Found
         '400':
           description: Bad Request. Missing required parameters
+  /seller:
+    post:
+      summary: Create a new seller account
+      operationId: createSellerAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SellerDto'
+      responses:
+        '201':
+          description: User Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SellerDto'
+  /seller/{sellerId}:
+    get:
+      summary: Retrieve a seller by ID
+      operationId: requestSellerInfo
+      parameters:
+        - name: sellerId
+          in: path
+          description: ID of the seller
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Seller Details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SellerDto'
+        '404':
+          description: Not Found
+        '400':
+          description: Bad Request. Missing required parameters
   /pet/{petId}:
     get:
       summary: Retrieve Pet details
@@ -288,6 +327,41 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Pet'
+    SellerDto:
+      type: object
+      properties:
+        sellerId:
+          type: long
+        fName:
+          type: string
+        lName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        phoneNo:
+          type: string
+
+    SellerResponseDto:
+      type: object
+      properties:
+        userId:
+          type: long
+        fName:
+          type: string
+        lName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        phoneNo:
+          type: string
+        petList:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pet'
     Pet:
       type: object
       properties:
@@ -317,8 +391,8 @@ components:
           type: string
         gender:
           type: string
-        user:
-          $ref: '#/components/schemas/User'
+        owner:
+          $ref: '#/components/schemas/SellerDto'
         service:
           $ref: '#/components/schemas/PetService'
 

@@ -14,9 +14,9 @@ public class PetEntity {
     private long petId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName="user_id")
+    @JoinColumn(name = "seller_id", referencedColumnName="seller_id")
     @JsonIgnore
-    private UserEntity user;
+    private SellerEntity seller;
 
     @Column(name = "breed")
     private String breed;
@@ -101,12 +101,12 @@ public class PetEntity {
         this.description = description;
     }
 
-    public UserEntity getUser() {
-        return user;
+    public SellerEntity getSeller() {
+        return seller;
     }
 
-    public void setUser(UserEntity userEntity) {
-        this.user = userEntity;
+    public void setSeller(SellerEntity sellerEntity) {
+        this.seller = sellerEntity;
     }
 
     public String getPetType() {
@@ -193,7 +193,7 @@ public class PetEntity {
     public String toString() {
         return "PetEntity{" +
                 "petId=" + petId +
-                ", user=" + user +
+                ", user=" + seller +
                 ", breed='" + breed + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +

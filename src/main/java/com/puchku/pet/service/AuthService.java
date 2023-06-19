@@ -5,8 +5,8 @@ import com.puchku.pet.exceptions.BadRequestException;
 import com.puchku.pet.exceptions.NotFoundException;
 import com.puchku.pet.model.LoginRequestDto;
 import com.puchku.pet.model.LoginSuccessResponseDto;
-import com.puchku.pet.model.entities.UserEntity;
-import com.puchku.pet.repository.UserRepository;
+import com.puchku.pet.model.entities.SellerEntity;
+import com.puchku.pet.repository.SellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,13 +29,13 @@ public class AuthService {
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    private UserRepository userRepository;
+    private SellerRepository sellerRepository;
 
     public ResponseEntity<LoginSuccessResponseDto> authenticateUser(LoginRequestDto loginRequest){
         if(loginRequest==null || loginRequest.getPassword()==null || loginRequest.getUsername()==null){
             throw new BadRequestException("Bad request");
         }
-        Optional<UserEntity> user = userRepository.findByPhoneNo(loginRequest.getUsername());
+        Optional<SellerEntity> user = sellerRepository.findByPhoneNo(loginRequest.getUsername());
         if(user.isEmpty()){
             throw new NotFoundException("User not found");
         }

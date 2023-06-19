@@ -5,12 +5,12 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "user", schema="poochku")
-public class UserEntity {
+@Table(name = "seller", schema="poochku")
+public class SellerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private long userId;
+    @Column(name = "seller_id")
+    private long sellerId;
 
     @Column(name = "f_name")
     private String fName;
@@ -39,7 +39,7 @@ public class UserEntity {
     @Column(name = "phone_no")
     private String phoneNo;
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy="seller")
     private List<PetEntity> petEntityList;
 
     public List<PetEntity> getDogList() {
@@ -50,12 +50,12 @@ public class UserEntity {
         this.petEntityList = petEntityList;
     }
 
-    public long getUserId() {
-        return userId;
+    public long getSellerId() {
+        return sellerId;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setSellerId(long sellerId) {
+        this.sellerId = sellerId;
     }
 
     public String getfName() {
@@ -133,7 +133,7 @@ public class UserEntity {
     @Override
     public String toString() {
         return "UserEntity{" +
-                "userId=" + userId +
+                "userId=" + sellerId +
                 ", fName='" + fName + '\'' +
                 ", mName='" + mName + '\'' +
                 ", lName='" + lName + '\'' +

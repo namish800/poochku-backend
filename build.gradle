@@ -4,6 +4,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.0'
 	id 'org.openapi.generator' version '6.6.0'
 	id 'org.springframework.boot' version '3.0.0'
+	id "com.microsoft.azure.azurewebapp" version "1.7.1"
 }
 apply plugin: 'java'
 group = 'com.puchku'
@@ -81,6 +82,22 @@ sourceSets {
 
 jar {
 	enabled = false
+}
+
+azurewebapp {
+	subscription = 'faa7ae88-826d-4ef5-be44-d75cc277f356'
+	resourceGroup = 'poochku-dev'
+	appName = 'poochku'
+	pricingTier = 'B1'
+	region = 'eastus'
+	runtime {
+		os = 'Linux'
+		webContainer = 'Java SE' // or 'Java SE' if you want to run an executable jar
+		javaVersion = 'Java 17'
+	}
+	auth {
+		type = 'azure_cli' // support azure_cli, oauth2, device_code and service_principal
+	}
 }
 
 compileJava.dependsOn generateOpenApi

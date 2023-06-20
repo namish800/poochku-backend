@@ -1,7 +1,7 @@
 package com.puchku.pet.util;
 
 public class CommonUtils {
-    public String createWhatsAppUrl(String phoneNumber) {
+    public static String createWhatsAppUrl(String phoneNumber) {
         // Remove any non-digit characters from the phone number
         String formattedPhoneNumber = phoneNumber.replaceAll("\\D", "");
 

@@ -14,6 +14,7 @@ import com.puchku.pet.repository.PetRepository;
 import com.puchku.pet.repository.DogServiceRepository;
 import com.puchku.pet.repository.PetServiceRepository;
 import com.puchku.pet.repository.SellerRepository;
+import com.puchku.pet.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -90,6 +91,7 @@ public class PetServiceImpl {
         sellerDto.setlName(sellerEntity.getlName());
         sellerDto.setEmail(sellerEntity.getEmail());
         sellerDto.setPhoneNo(sellerEntity.getPhoneNo());
+        sellerDto.setWhatsappUrl(CommonUtils.createWhatsAppUrl(sellerEntity.getPhoneNo()));
         return sellerDto;
     }
 

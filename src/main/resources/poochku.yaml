@@ -342,6 +342,8 @@ components:
           type: string
         phoneNo:
           type: string
+        whatsappUrl:
+          type: string
 
     SellerResponseDto:
       type: object

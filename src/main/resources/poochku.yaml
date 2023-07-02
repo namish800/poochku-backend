@@ -397,6 +397,10 @@ components:
           $ref: '#/components/schemas/SellerDto'
         service:
           $ref: '#/components/schemas/PetService'
+        imageUrls:
+          type: array
+          items:
+            type: string
 
     PetService:
       type: object
@@ -483,3 +487,17 @@ components:
           type: string
         price:
           type: string
+        imageBlobs:
+          type: array
+          items:
+            type: object
+            properties:
+              fileName:
+                type: string
+              blob:
+                type: string
+                format: byte
+        imageUrls:
+          type: array
+          items:
+            type: string

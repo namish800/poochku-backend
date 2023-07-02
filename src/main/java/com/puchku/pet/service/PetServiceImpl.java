@@ -1,21 +1,30 @@
 package com.puchku.pet.service;
 
+import com.azure.core.http.rest.Response;
+import com.azure.storage.blob.BlobClient;
+import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobServiceClient;
+import com.azure.storage.blob.BlobServiceClientBuilder;
+import com.azure.storage.blob.models.BlockBlobItem;
+import com.azure.storage.blob.options.BlobParallelUploadOptions;
 import com.puchku.pet.exceptions.BadRequestException;
 import com.puchku.pet.exceptions.NotFoundException;
+import com.puchku.pet.model.*;
 import com.puchku.pet.model.CreateNewPetReqDto;
+import com.puchku.pet.model.CreateNewPetReqDtoImageBlobsInner;
 import com.puchku.pet.model.PaginatedPetResponseDto;
 import com.puchku.pet.model.Pet;
 import com.puchku.pet.model.PetService;
 import com.puchku.pet.model.SellerDto;
 import com.puchku.pet.model.entities.PetEntity;
+import com.puchku.pet.model.entities.PetImageEntity;
 import com.puchku.pet.model.entities.PetServiceEntity;
 import com.puchku.pet.model.entities.SellerEntity;
-import com.puchku.pet.repository.PetRepository;
-import com.puchku.pet.repository.DogServiceRepository;
-import com.puchku.pet.repository.PetServiceRepository;
-import com.puchku.pet.repository.SellerRepository;
+import com.puchku.pet.repository.*;
 import com.puchku.pet.util.CommonUtils;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +34,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +54,15 @@ public class PetServiceImpl {
 
     @Autowired
     private PetServiceRepository petServiceRepository;
+
+    @Autowired
+    private PetImageRepository petImageRepository;
+
+    @Value("${azure.storage.connectionString}")
+    private String connectionString;
+
+    @Value("${azure.storage.containerName}")
+    private String containerName;
 
     public ResponseEntity<Pet> requestPetInfo(long petId) {
         PetEntity petEntity = petRepository.findByPetId(petId)
@@ -134,8 +154,42 @@ public class PetServiceImpl {
             petServiceEntity.setServiceCode(petReqDto.getServiceCode());
             petServiceEntity.setServiceName("SELL");
             petServiceRepository.save(petServiceEntity);
+
+            //upload to azure blob
+            List<String> imageUrls = uploadImage(petReqDto.getImageBlobs());
+            petReqDto.setImageUrls(imageUrls);
+            //to reduce response size
+            petReqDto.setImageBlobs(null);
+            PetImageEntity petImageEntity = new PetImageEntity();
+            petImageEntity.setImageUrls(imageUrls);
+            petImageEntity.setPetEntity(petEntity);
+            petImageRepository.save(petImageEntity);
         }
+
         return new ResponseEntity<>(petReqDto, HttpStatus.OK);
+    }
+
+    private List<String> uploadImage(@Valid List<CreateNewPetReqDtoImageBlobsInner> imageBlobs) {
+
+
+
+        // Create a BlobServiceClient instance
+        BlobServiceClient blobServiceClient = new BlobServiceClientBuilder().connectionString(this.connectionString).buildClient();
+
+        // Create a BlobContainerClient instance
+        BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient(this.containerName);
+
+        List<String> urlsList = new ArrayList<>();
+        for(CreateNewPetReqDtoImageBlobsInner imageBlob : imageBlobs){
+            // Create a BlobClient instance for uploading the image
+            BlobClient blobClient = containerClient.getBlobClient("vFolder/"+imageBlob.getFileName());
+            InputStream dataStream = new ByteArrayInputStream(imageBlob.getBlob());
+            Response<BlockBlobItem> response = blobClient.uploadWithResponse(new BlobParallelUploadOptions(dataStream, imageBlob.getBlob().length), null, null);
+            if(response.getStatusCode()==HttpStatus.CREATED.value()){
+                urlsList.add(blobClient.getBlobUrl());
+            }
+        }
+        return urlsList;
     }
 
     private PetEntity mapPetReqDtoToPetEntity(CreateNewPetReqDto petReqDto) {
@@ -203,4 +257,19 @@ public class PetServiceImpl {
 
     }
 
+//    public static void main(String[] args) {
+//        String filePath = "D:\\YT\\MaxBanner.png";
+//
+//        byte[] res = readImageAsBytes(filePath);
+//    }
+//
+//    private static byte[] readImageAsBytes(String imagePath) {
+//        try {
+//            Path path = Paths.get(imagePath);
+//            return Files.readAllBytes(path);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return new byte[0];
+//    }
 }

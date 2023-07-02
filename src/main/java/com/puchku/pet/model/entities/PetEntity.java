@@ -3,6 +3,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "pet", schema="poochku")
@@ -60,6 +61,9 @@ public class PetEntity {
 
     @Column(name = "gender")
     private String gender;
+
+    @OneToMany(mappedBy="petEntity")
+    private List<PetImageEntity> petImageEntityList;
 
     public PetServiceEntity getService() {
         return service;
@@ -187,6 +191,14 @@ public class PetEntity {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public List<PetImageEntity> getPetImageEntityList() {
+        return petImageEntityList;
+    }
+
+    public void setPetImageEntityList(List<PetImageEntity> petImageEntityList) {
+        this.petImageEntityList = petImageEntityList;
     }
 
     @Override

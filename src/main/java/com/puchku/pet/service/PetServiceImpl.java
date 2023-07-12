@@ -139,20 +139,21 @@ public class PetServiceImpl {
     }
 
     public ResponseEntity<CreateNewPetReqDto> createNewPet(CreateNewPetReqDto petReqDto) {
-        if(petReqDto!=null && petReqDto.getOwnerId()==0 && petReqDto.getOwnerId()==null){
+        if(petReqDto!=null && petReqDto.getOwnerId()!=null && petReqDto.getOwnerId()==null){
             throw new BadRequestException("Missing required owner id");
         }
         if(petReqDto!=null) {
             //add new pet in db
             PetEntity petEntity = mapPetReqDtoToPetEntity(petReqDto);
             petEntity = petRepository.save(petEntity);
-            petReqDto.setPetId(petEntity.getPetId());
+            petReqDto.setPetId(String.valueOf(petEntity.getPetId()));
 
             //add the service for the pet based on service code
             PetServiceEntity petServiceEntity = new PetServiceEntity();
             petServiceEntity.setPetEntity(petEntity);
             petServiceEntity.setServiceCode(petReqDto.getServiceCode());
             petServiceEntity.setServiceName("SELL");
+            petServiceEntity.setPrice(Integer.parseInt(petReqDto.getPrice()));
             petServiceRepository.save(petServiceEntity);
 
             //upload to azure blob
@@ -194,14 +195,14 @@ public class PetServiceImpl {
 
     private PetEntity mapPetReqDtoToPetEntity(CreateNewPetReqDto petReqDto) {
         PetEntity petEntity = new PetEntity();
-        Optional<SellerEntity> sellerEntity = sellerRepository.findBySellerId(petReqDto.getOwnerId());
+        Optional<SellerEntity> sellerEntity = sellerRepository.findBySellerId(Long.parseLong(petReqDto.getOwnerId().trim()));
         if(sellerEntity.isEmpty()){ throw new BadRequestException("User does not Exist");}
         petEntity.setSeller(sellerEntity.get());
         petEntity.setBreed(petReqDto.getBreed());
         petEntity.setName(petReqDto.getName());
         petEntity.setDescription(petReqDto.getDescription());
         petEntity.setPetType(petReqDto.getPetType());
-        petEntity.setAge(petReqDto.getAgeInDays());
+        petEntity.setAge(Integer.parseInt(petReqDto.getAgeInDays().trim()));
         petEntity.setPetStatus("ACTIVE");
         petEntity.setFatherBreed(petReqDto.getFatherBreed());
         petEntity.setMotherBreed(petReqDto.getMotherBreed());

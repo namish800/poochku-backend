@@ -460,9 +460,11 @@ components:
       type: object
       properties:
         petId:
-          type: long
+          type: string
+#          type: long
         ownerId:
-          type: long
+          type: string
+#          type: long
         name:
           type: string
         petType:
@@ -474,7 +476,7 @@ components:
         description:
           type: string
         ageInDays:
-          type: integer
+          type: string
         motherBreed:
           type: string
         fatherBreed:

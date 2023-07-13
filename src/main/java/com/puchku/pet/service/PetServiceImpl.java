@@ -9,7 +9,6 @@ import com.azure.storage.blob.models.BlockBlobItem;
 import com.azure.storage.blob.options.BlobParallelUploadOptions;
 import com.puchku.pet.exceptions.BadRequestException;
 import com.puchku.pet.exceptions.NotFoundException;
-import com.puchku.pet.model.*;
 import com.puchku.pet.model.CreateNewPetReqDto;
 import com.puchku.pet.model.CreateNewPetReqDtoImageBlobsInner;
 import com.puchku.pet.model.PaginatedPetResponseDto;
@@ -256,6 +255,57 @@ public class PetServiceImpl {
         response.setPets(petList);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
+    }
+
+    public ResponseEntity<String> deletePet(Integer petId) {
+        if(petId==null || petId==0){
+            throw new BadRequestException("Invalid pet Id");
+        }
+        Optional<PetEntity> petEntityOptional = petRepository.findByPetId(petId);
+        if(petEntityOptional.isEmpty()){
+            throw new NotFoundException("Pet not found");
+        }
+        PetEntity petEntity = petEntityOptional.get();
+        petEntity.setPetStatus("DELETED");
+        petRepository.save(petEntity);
+        return new ResponseEntity<>("Pet Deleted", HttpStatus.OK);
+    }
+
+    public ResponseEntity<CreateNewPetReqDto> updatePetDetails(CreateNewPetReqDto petReqDto) {
+        if(petReqDto!=null && (petReqDto.getPetId()==null || Integer.parseInt(petReqDto.getPetId())==0)){
+            throw new BadRequestException("Invalid pet Id");
+        }
+
+        if(petReqDto!=null) {
+            Optional<PetEntity> petEntityOptional = petRepository.findByPetId(Integer.parseInt(petReqDto.getPetId()));
+            if(petEntityOptional.isEmpty()){
+                throw new NotFoundException("Pet not found");
+            }
+            //add new pet in db
+            PetEntity petEntity = petEntityOptional.get();
+            petEntity = petRepository.save(petEntity);
+            petReqDto.setPetId(String.valueOf(petEntity.getPetId()));
+
+            //add the service for the pet based on service code
+            PetServiceEntity petServiceEntity = new PetServiceEntity();
+            petServiceEntity.setPetEntity(petEntity);
+            petServiceEntity.setServiceCode(petReqDto.getServiceCode());
+            petServiceEntity.setServiceName("SELL");
+            petServiceEntity.setPrice(Integer.parseInt(petReqDto.getPrice()));
+            petServiceRepository.save(petServiceEntity);
+
+            //upload to azure blob
+            List<String> imageUrls = uploadImage(petReqDto.getImageBlobs());
+            petReqDto.setImageUrls(imageUrls);
+            //to reduce response size
+            petReqDto.setImageBlobs(null);
+            PetImageEntity petImageEntity = new PetImageEntity();
+            petImageEntity.setImageUrls(imageUrls);
+            petImageEntity.setPetEntity(petEntity);
+            petImageRepository.save(petImageEntity);
+        }
+
+        return new ResponseEntity<>(petReqDto, HttpStatus.OK);
     }
 
 //    public static void main(String[] args) {

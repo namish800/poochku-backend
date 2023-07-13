@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class PetApiController implements com.puchku.pet.api.PetApi {
+
     @Autowired
     private PetServiceImpl petService;
-
 
     @Override
     public ResponseEntity<CreateNewPetReqDto> addNewPet(CreateNewPetReqDto petReqDto) {
@@ -21,8 +21,8 @@ public class PetApiController implements com.puchku.pet.api.PetApi {
     }
 
     @Override
-    public ResponseEntity<Void> deletePetDetails(Integer petId) {
-        return null;
+    public ResponseEntity<String> deletePetDetails(Integer petId) {
+        return petService.deletePet(petId);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class PetApiController implements com.puchku.pet.api.PetApi {
     }
 
     @Override
-    public ResponseEntity<Pet> updatePetDetails(Integer petId) {
-        return null;
+    public ResponseEntity<CreateNewPetReqDto> updatePetDetails(CreateNewPetReqDto createNewPetReqDto) {
+        return petService.updatePetDetails(createNewPetReqDto);
     }
 }

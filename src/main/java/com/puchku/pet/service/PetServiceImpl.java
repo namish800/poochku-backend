@@ -7,6 +7,7 @@ import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
 import com.azure.storage.blob.models.BlockBlobItem;
 import com.azure.storage.blob.options.BlobParallelUploadOptions;
+import com.puchku.pet.enums.PetStatus;
 import com.puchku.pet.exceptions.BadRequestException;
 import com.puchku.pet.exceptions.NotFoundException;
 import com.puchku.pet.model.CreateNewPetReqDto;
@@ -143,7 +144,8 @@ public class PetServiceImpl {
         }
         if(petReqDto!=null) {
             //add new pet in db
-            PetEntity petEntity = mapPetReqDtoToPetEntity(petReqDto);
+            PetEntity petEntity = new PetEntity();
+            mapPetReqDtoToPetEntity(petEntity, petReqDto);
             petEntity = petRepository.save(petEntity);
             petReqDto.setPetId(String.valueOf(petEntity.getPetId()));
 
@@ -192,21 +194,25 @@ public class PetServiceImpl {
         return urlsList;
     }
 
-    private PetEntity mapPetReqDtoToPetEntity(CreateNewPetReqDto petReqDto) {
-        PetEntity petEntity = new PetEntity();
-        Optional<SellerEntity> sellerEntity = sellerRepository.findBySellerId(Long.parseLong(petReqDto.getOwnerId().trim()));
-        if(sellerEntity.isEmpty()){ throw new BadRequestException("User does not Exist");}
-        petEntity.setSeller(sellerEntity.get());
-        petEntity.setBreed(petReqDto.getBreed());
-        petEntity.setName(petReqDto.getName());
-        petEntity.setDescription(petReqDto.getDescription());
-        petEntity.setPetType(petReqDto.getPetType());
-        petEntity.setAge(Integer.parseInt(petReqDto.getAgeInDays().trim()));
-        petEntity.setPetStatus("ACTIVE");
-        petEntity.setFatherBreed(petReqDto.getFatherBreed());
-        petEntity.setMotherBreed(petReqDto.getMotherBreed());
-        petEntity.setVaccStatus(petReqDto.getVaccinationStatus());
-        return petEntity;
+    private void mapPetReqDtoToPetEntity(PetEntity petEntity, CreateNewPetReqDto petReqDto) {
+        if(petReqDto!=null) {
+            if(StringUtils.hasLength(petReqDto.getOwnerId())) {
+                Optional<SellerEntity> sellerEntity = sellerRepository.findBySellerId(Long.parseLong(petReqDto.getOwnerId().trim()));
+                if (sellerEntity.isEmpty()) {
+                    throw new BadRequestException("User does not Exist");
+                }
+                petEntity.setSeller(sellerEntity.get());
+            }
+            petEntity.setBreed(petReqDto.getBreed());
+            petEntity.setName(petReqDto.getName());
+            petEntity.setDescription(petReqDto.getDescription());
+            petEntity.setPetType(petReqDto.getPetType());
+            petEntity.setAge(Integer.parseInt(petReqDto.getAgeInDays().trim()));
+            petEntity.setPetStatus(PetStatus.ACTIVE.toString());
+            petEntity.setFatherBreed(petReqDto.getFatherBreed());
+            petEntity.setMotherBreed(petReqDto.getMotherBreed());
+            petEntity.setVaccStatus(petReqDto.getVaccinationStatus());
+        }
     }
 
     public ResponseEntity<PaginatedPetResponseDto> getPetByParams(String serviceCode, String location, String breed,
@@ -266,7 +272,7 @@ public class PetServiceImpl {
             throw new NotFoundException("Pet not found");
         }
         PetEntity petEntity = petEntityOptional.get();
-        petEntity.setPetStatus("DELETED");
+        petEntity.setPetStatus(PetStatus.INACTIVE.toString());
         petRepository.save(petEntity);
         return new ResponseEntity<>("Pet Deleted", HttpStatus.OK);
     }
@@ -281,8 +287,10 @@ public class PetServiceImpl {
             if(petEntityOptional.isEmpty()){
                 throw new NotFoundException("Pet not found");
             }
-            //add new pet in db
+            //pet from db
             PetEntity petEntity = petEntityOptional.get();
+            // update pet details
+            mapPetReqDtoToPetEntity(petEntity, petReqDto);
             petEntity = petRepository.save(petEntity);
             petReqDto.setPetId(String.valueOf(petEntity.getPetId()));
 
@@ -308,7 +316,7 @@ public class PetServiceImpl {
         return new ResponseEntity<>(petReqDto, HttpStatus.OK);
     }
 
-//    public static void main(String[] args) {
+    public static void main(String[] args) {
 //        String filePath = "D:\\YT\\MaxBanner.png";
 //
 //        byte[] res = readImageAsBytes(filePath);
@@ -322,5 +330,6 @@ public class PetServiceImpl {
 //            e.printStackTrace();
 //        }
 //        return new byte[0];
-//    }
+        System.out.println(PetStatus.ACTIVE.toString());
+    }
 }

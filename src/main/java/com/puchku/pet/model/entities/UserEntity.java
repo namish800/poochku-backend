@@ -1,16 +1,17 @@
 package com.puchku.pet.model.entities;
+
 import jakarta.persistence.*;
 
-import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "seller", schema="poochku")
-public class SellerEntity {
+@Table(name = "user", schema="poochku")
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "seller_id")
-    private long sellerId;
+    @Column(name = "user_Id")
+    private long userId;
 
     @Column(name = "f_name")
     private String fName;
@@ -31,32 +32,23 @@ public class SellerEntity {
     private String email;
 
     @Column(name = "crt_ts")
-    private OffsetDateTime crtTs;
+    private Date crtTs;
 
     @Column(name = "last_login")
-    private OffsetDateTime lastLogin;
+    private Date lastLogin;
 
     @Column(name = "phone_no")
     private String phoneNo;
 
-    @OneToMany(mappedBy="seller")
+    @OneToMany(mappedBy="user")
     private List<PetEntity> petEntityList;
 
-    public List<PetEntity> getPetEntityList() {
-        return petEntityList;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setPetEntityList(List<PetEntity> petEntityList) {
-        this.petEntityList = petEntityList;
-    }
-
-
-    public long getSellerId() {
-        return sellerId;
-    }
-
-    public void setSellerId(long sellerId) {
-        this.sellerId = sellerId;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public String getfName() {
@@ -107,19 +99,19 @@ public class SellerEntity {
         this.email = email;
     }
 
-    public OffsetDateTime getCrtTs() {
+    public Date getCrtTs() {
         return crtTs;
     }
 
-    public void setCrtTs(OffsetDateTime crtTs) {
+    public void setCrtTs(Date crtTs) {
         this.crtTs = crtTs;
     }
 
-    public OffsetDateTime getLastLogin() {
+    public Date getLastLogin() {
         return lastLogin;
     }
 
-    public void setLastLogin(OffsetDateTime lastLogin) {
+    public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
     }
 
@@ -131,19 +123,12 @@ public class SellerEntity {
         this.phoneNo = phoneNo;
     }
 
-    @Override
-    public String toString() {
-        return "UserEntity{" +
-                "userId=" + sellerId +
-                ", fName='" + fName + '\'' +
-                ", mName='" + mName + '\'' +
-                ", lName='" + lName + '\'' +
-                ", role='" + role + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", crtTs=" + crtTs +
-                ", lastLogin=" + lastLogin +
-                ", phoneNo='" + phoneNo +
-                '}';
+    public List<PetEntity> getPetEntityList() {
+        return petEntityList;
+    }
+
+    public void setPetEntityList(List<PetEntity> petEntityList) {
+        this.petEntityList = petEntityList;
     }
 }
+

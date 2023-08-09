@@ -19,6 +19,11 @@ public class PetEntity {
     @JsonIgnore
     private SellerEntity seller;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName="user_id")
+    @JsonIgnore
+    private UserEntity user;
+
     @Column(name = "breed")
     private String breed;
 
@@ -64,6 +69,13 @@ public class PetEntity {
 
     @OneToMany(mappedBy="petEntity")
     private List<PetImageEntity> petImageEntityList;
+
+    @OneToMany(mappedBy="swiper")
+    private List<SwipeEntity> petSwiperList;
+
+    @OneToMany(mappedBy="target")
+    private List<SwipeEntity> petTargerList;
+
 
     public PetServiceEntity getService() {
         return service;
@@ -199,6 +211,14 @@ public class PetEntity {
 
     public void setPetImageEntityList(List<PetImageEntity> petImageEntityList) {
         this.petImageEntityList = petImageEntityList;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     @Override

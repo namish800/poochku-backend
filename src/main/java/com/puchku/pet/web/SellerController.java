@@ -1,6 +1,5 @@
 package com.puchku.pet.web;
 
-import com.puchku.pet.model.SellerDto;
 import com.puchku.pet.api.UserApi;
 import com.puchku.pet.model.UserDto;
 import com.puchku.pet.service.UserService;

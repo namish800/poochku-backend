@@ -5,8 +5,10 @@ import com.puchku.pet.exceptions.BadRequestException;
 import com.puchku.pet.exceptions.NotFoundException;
 import com.puchku.pet.model.LoginRequestDto;
 import com.puchku.pet.model.LoginSuccessResponseDto;
+import com.puchku.pet.model.UserDto;
 import com.puchku.pet.model.entities.SellerEntity;
 import com.puchku.pet.repository.SellerRepository;
+import com.puchku.pet.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,6 +51,19 @@ public class AuthService {
                 .collect(Collectors.toList()));
         LoginSuccessResponseDto responseDto = new LoginSuccessResponseDto();
         responseDto.setToken(token);
+        responseDto.setUser(mapUserDtoFromUserEntity(user.get()));
         return ResponseEntity.ok(responseDto);
+    }
+
+    private UserDto mapUserDtoFromUserEntity(SellerEntity sellerEntity) {
+        UserDto userDto = new UserDto();
+        userDto.setUserId(sellerEntity.getSellerId());
+        userDto.setEmail(sellerEntity.getEmail());
+        userDto.setPhoneNo(sellerEntity.getPhoneNo());
+        userDto.setWhatsappUrl(CommonUtils.createWhatsAppUrl(sellerEntity.getPhoneNo()));
+        userDto.setfName(sellerEntity.getfName());
+        userDto.setlName(sellerEntity.getlName());
+        userDto.setRole(sellerEntity.getRoles().get(0));
+        return userDto;
     }
 }

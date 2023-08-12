@@ -42,6 +42,9 @@ public class SellerEntity {
     @OneToMany(mappedBy="seller")
     private List<PetEntity> petEntityList;
 
+    @OneToMany(mappedBy = "sellerEntity")
+    private List<EnquiryEntity> enquiryList;
+
     public List<PetEntity> getPetEntityList() {
         return petEntityList;
     }
@@ -129,6 +132,14 @@ public class SellerEntity {
 
     public void setPhoneNo(String phoneNo) {
         this.phoneNo = phoneNo;
+    }
+
+    public List<EnquiryEntity> getEnquiryList() {
+        return enquiryList;
+    }
+
+    public void setEnquiryList(List<EnquiryEntity> enquiryList) {
+        this.enquiryList = enquiryList;
     }
 
     @Override

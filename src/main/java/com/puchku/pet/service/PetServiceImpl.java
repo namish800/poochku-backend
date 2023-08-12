@@ -172,9 +172,6 @@ public class PetServiceImpl {
     }
 
     private List<String> uploadImage(@Valid List<CreateNewPetReqDtoImageBlobsInner> imageBlobs) {
-
-
-
         // Create a BlobServiceClient instance
         BlobServiceClient blobServiceClient = new BlobServiceClientBuilder().connectionString(this.connectionString).buildClient();
 
@@ -212,6 +209,8 @@ public class PetServiceImpl {
             petEntity.setFatherBreed(petReqDto.getFatherBreed());
             petEntity.setMotherBreed(petReqDto.getMotherBreed());
             petEntity.setVaccStatus(petReqDto.getVaccinationStatus());
+            petEntity.setLocation(petReqDto.getLocation());
+            petEntity.setGender(petReqDto.getGender());
         }
     }
 
@@ -229,7 +228,7 @@ public class PetServiceImpl {
 
         if (location != null) {
             spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("location"), location));
+                    criteriaBuilder.equal(criteriaBuilder.lower(root.get("location")), location.toLowerCase()));
         }
 
         if (breed != null) {

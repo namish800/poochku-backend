@@ -254,7 +254,32 @@ paths:
           description: Not Found
         '400':
           description: Bad Request. Missing required parameters
-
+  /enquiry/best-price:
+    post:
+      summary: Saves get best price enquiry to DB
+      operationId: saveBestPriceEnquiry
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: petId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Enquiry added
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: Not Found
+        '400':
+          description: Bad Request. Missing required parameters
 components:
   schemas:
     UserDto:
@@ -361,6 +386,8 @@ components:
       properties:
         token:
           type: string
+        user:
+          $ref: '#/components/schemas/UserDto'
 
     ErrorResponseDto:
       type: object
@@ -422,6 +449,8 @@ components:
         quality:
           type: string
         price:
+          type: string
+        gender:
           type: string
         imageBlobs:
           type: array

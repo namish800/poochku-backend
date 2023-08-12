@@ -70,6 +70,9 @@ public class PetEntity {
     @OneToMany(mappedBy="petEntity")
     private List<PetImageEntity> petImageEntityList;
 
+    @OneToMany(mappedBy = "petEntity")
+    private List<EnquiryEntity> petEnquiries;
+
     @OneToMany(mappedBy="swiper")
     private List<SwipeEntity> petSwiperList;
 
@@ -219,6 +222,30 @@ public class PetEntity {
 
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+
+    public List<EnquiryEntity> getPetEnquiries() {
+        return petEnquiries;
+    }
+
+    public void setPetEnquiries(List<EnquiryEntity> petEnquiries) {
+        this.petEnquiries = petEnquiries;
+    }
+
+    public List<SwipeEntity> getPetSwiperList() {
+        return petSwiperList;
+    }
+
+    public void setPetSwiperList(List<SwipeEntity> petSwiperList) {
+        this.petSwiperList = petSwiperList;
+    }
+
+    public List<SwipeEntity> getPetTargerList() {
+        return petTargerList;
+    }
+
+    public void setPetTargerList(List<SwipeEntity> petTargerList) {
+        this.petTargerList = petTargerList;
     }
 
     @Override

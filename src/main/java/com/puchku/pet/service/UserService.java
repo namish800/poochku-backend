@@ -2,7 +2,6 @@ package com.puchku.pet.service;
 
 import com.puchku.pet.exceptions.BadRequestException;
 import com.puchku.pet.exceptions.NotFoundException;
-import com.puchku.pet.model.SellerDto;
 import com.puchku.pet.model.UserDto;
 import com.puchku.pet.model.entities.SellerEntity;
 import com.puchku.pet.repository.SellerRepository;
@@ -77,6 +76,7 @@ public class UserService {
         userDto.setPhoneNo(sellerEntity.getPhoneNo());
         userDto.setWhatsappUrl(CommonUtils.createWhatsAppUrl(sellerEntity.getPhoneNo()));
         userDto.setfName(sellerEntity.getfName());
-        userDto.setlName(userDto.getlName());
+        userDto.setlName(sellerEntity.getlName());
+        userDto.setRole(sellerEntity.getRoles().get(0));
     }
 }

@@ -44,4 +44,5 @@ public class PetApiController implements com.puchku.pet.api.PetApi {
     public ResponseEntity<CreateNewPetReqDto> updatePetDetails(CreateNewPetReqDto createNewPetReqDto) {
         return petService.updatePetDetails(createNewPetReqDto);
     }
+
 }

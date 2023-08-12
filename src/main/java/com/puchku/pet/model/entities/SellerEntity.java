@@ -22,7 +22,7 @@ public class SellerEntity {
     private String lName;
 
     @Column(name = "user_role")
-    private String role;
+    private List<String> roles;
 
     @Column(name = "password")
     private String password;
@@ -83,12 +83,12 @@ public class SellerEntity {
         this.lName = lName;
     }
 
-    public String getRole() {
-        return role;
+    public List<String> getRoles() {
+        return roles;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 
     public String getPassword() {
@@ -138,7 +138,7 @@ public class SellerEntity {
                 ", fName='" + fName + '\'' +
                 ", mName='" + mName + '\'' +
                 ", lName='" + lName + '\'' +
-                ", role='" + role + '\'' +
+                ", role='" + roles + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", crtTs=" + crtTs +

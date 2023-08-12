@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,7 +49,7 @@ public class SellerService {
         sellerEntity.setLastLogin(OffsetDateTime.now());
         sellerEntity.setCrtTs(OffsetDateTime.now());
         sellerEntity.setPhoneNo(sellerDto.getPhoneNo());
-        sellerEntity.setRole("SELLER");
+        sellerEntity.setRoles(List.of("SELLER"));
         sellerEntity.setPassword(passwordEncoder.encode(sellerDto.getPassword()));
     }
 

@@ -4,12 +4,17 @@ import com.puchku.pet.exceptions.NotFoundException;
 import com.puchku.pet.model.entities.SellerEntity;
 import com.puchku.pet.repository.SellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -28,8 +33,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getPhoneNo())
                 .password(user.getPassword())
-                .roles(user.getRole())
+                .authorities(getAuthorities(user.getRoles()))
                 .build();
+    }
+    private Collection<? extends GrantedAuthority> getAuthorities(List<String> roles) {
+        return roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).collect(Collectors.toList());
     }
 }
 

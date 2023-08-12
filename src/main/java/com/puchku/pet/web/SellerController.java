@@ -1,26 +1,26 @@
 package com.puchku.pet.web;
 
 import com.puchku.pet.model.SellerDto;
-import com.puchku.pet.api.SellerApi;
-import com.puchku.pet.service.SellerService;
+import com.puchku.pet.api.UserApi;
+import com.puchku.pet.model.UserDto;
+import com.puchku.pet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class SellerController implements SellerApi {
+public class SellerController implements UserApi {
 
     @Autowired
-    private SellerService sellerService;
+    private UserService userService;
 
     @Override
-    public ResponseEntity<SellerDto> createSellerAccount(SellerDto sellerDto) {
-
-        return sellerService.createSellerAccount(sellerDto);
+    public ResponseEntity<UserDto> createUserAccount(UserDto userDto) {
+        return userService.createUserAccount(userDto);
     }
 
     @Override
-    public ResponseEntity<SellerDto> requestSellerInfo(Integer sellerId) {
-        return sellerService.getSellerDetails(sellerId);
+    public ResponseEntity<UserDto> requestAccountInfo(Integer userId) {
+        return userService.getUserDetails(userId);
     }
 }

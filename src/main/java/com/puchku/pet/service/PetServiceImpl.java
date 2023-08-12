@@ -15,7 +15,7 @@ import com.puchku.pet.model.CreateNewPetReqDtoImageBlobsInner;
 import com.puchku.pet.model.PaginatedPetResponseDto;
 import com.puchku.pet.model.Pet;
 import com.puchku.pet.model.PetService;
-import com.puchku.pet.model.SellerDto;
+import com.puchku.pet.model.UserDto;
 import com.puchku.pet.model.entities.PetEntity;
 import com.puchku.pet.model.entities.PetImageEntity;
 import com.puchku.pet.model.entities.PetServiceEntity;
@@ -85,8 +85,8 @@ public class PetServiceImpl {
         petResponse.setLocation(petEntity.getLocation());
         petResponse.setQuality(petEntity.getQuality());
         petResponse.setGender(petEntity.getGender());
-        SellerDto seller = mapSellerEntitytoSellerDto(petEntity.getSeller());
-        petResponse.setOwner(seller);
+        UserDto owner = mapSellerEntitytoUserDto(petEntity.getSeller());
+        petResponse.setOwner(owner);
 //        List<PetService> serviceList = petEntity.getServiceList()
 //                .stream()
 //                .map(this::mapPetServiceEntityToPetService)
@@ -104,15 +104,15 @@ public class PetServiceImpl {
         return petService;
     }
 
-    private SellerDto mapSellerEntitytoSellerDto(SellerEntity sellerEntity) {
-        SellerDto sellerDto = new SellerDto();
-        sellerDto.setSellerId(sellerEntity.getSellerId());
-        sellerDto.setfName(sellerEntity.getfName());
-        sellerDto.setlName(sellerEntity.getlName());
-        sellerDto.setEmail(sellerEntity.getEmail());
-        sellerDto.setPhoneNo(sellerEntity.getPhoneNo());
-        sellerDto.setWhatsappUrl(CommonUtils.createWhatsAppUrl(sellerEntity.getPhoneNo()));
-        return sellerDto;
+    private UserDto mapSellerEntitytoUserDto(SellerEntity sellerEntity) {
+        UserDto userDto = new UserDto();
+        userDto.setUserId(sellerEntity.getSellerId());
+        userDto.setfName(sellerEntity.getfName());
+        userDto.setlName(sellerEntity.getlName());
+        userDto.setEmail(sellerEntity.getEmail());
+        userDto.setPhoneNo(sellerEntity.getPhoneNo());
+        userDto.setWhatsappUrl(CommonUtils.createWhatsAppUrl(sellerEntity.getPhoneNo()));
+        return userDto;
     }
 
     public ResponseEntity<com.puchku.pet.model.PaginatedPetResponseDto> getPetByService(String serviceCode, Integer page, Integer size) {

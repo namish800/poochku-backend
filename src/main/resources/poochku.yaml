@@ -41,28 +41,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponseDto'
-
-  /users:
+  /user:
     post:
-      summary: Create a new user
-      operationId: createUser
+      summary: Create a new account
+      operationId: createUserAccount
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserDto'
       responses:
         '201':
           description: User Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-  /users/{userId}:
+                $ref: '#/components/schemas/UserDto'
+  /user/{userId}:
     get:
-      summary: Retrieve a user by ID
-      operationId: requestUserInfo
+      summary: Retrieve account details by ID
+      operationId: requestAccountInfo
       parameters:
         - name: userId
           in: path
@@ -76,46 +75,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '404':
-          description: Not Found
-        '400':
-          description: Bad Request. Missing required parameters
-  /seller:
-    post:
-      summary: Create a new seller account
-      operationId: createSellerAccount
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SellerDto'
-      responses:
-        '201':
-          description: User Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SellerDto'
-  /seller/{sellerId}:
-    get:
-      summary: Retrieve a seller by ID
-      operationId: requestSellerInfo
-      parameters:
-        - name: sellerId
-          in: path
-          description: ID of the seller
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Seller Details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SellerDto'
+                $ref: '#/components/schemas/UserDto'
         '404':
           description: Not Found
         '400':
@@ -297,7 +257,7 @@ paths:
 
 components:
   schemas:
-    User:
+    UserDto:
       type: object
       properties:
         userId:
@@ -311,6 +271,10 @@ components:
         password:
           type: string
         phoneNo:
+          type: string
+        whatsappUrl:
+          type: string
+        role:
           type: string
 
     UserResponseDto:
@@ -328,42 +292,7 @@ components:
           type: string
         phoneNo:
           type: string
-        petList:
-          type: array
-          items:
-            $ref: '#/components/schemas/Pet'
-    SellerDto:
-      type: object
-      properties:
-        sellerId:
-          type: long
-        fName:
-          type: string
-        lName:
-          type: string
-        email:
-          type: string
-        password:
-          type: string
-        phoneNo:
-          type: string
-        whatsappUrl:
-          type: string
-
-    SellerResponseDto:
-      type: object
-      properties:
-        userId:
-          type: long
-        fName:
-          type: string
-        lName:
-          type: string
-        email:
-          type: string
-        password:
-          type: string
-        phoneNo:
+        role:
           type: string
         petList:
           type: array
@@ -399,7 +328,7 @@ components:
         gender:
           type: string
         owner:
-          $ref: '#/components/schemas/SellerDto'
+          $ref: '#/components/schemas/UserDto'
         service:
           $ref: '#/components/schemas/PetService'
         imageUrls:

@@ -30,6 +30,7 @@ public class UserService {
         if(userDto!=null && (StringUtils.isEmpty(userDto.getPhoneNo()) || StringUtils.isEmpty(userDto.getEmail()))) {
             throw new BadRequestException("Missing phone no. or email");
         }
+
         SellerEntity sellerEntity = new SellerEntity();
         createSellerEntityFromSellerDto(sellerEntity, userDto);
 

@@ -88,7 +88,9 @@ public class PetServiceImpl {
         UserDto owner = mapSellerEntitytoUserDto(petEntity.getSeller());
         petResponse.setOwner(owner);
         petResponse.setService(mapPetServiceEntityToPetService(petEntity.getService()));
-        petResponse.setImageUrls(petEntity.getPetImageEntity().getImageUrls());
+        if(petEntity.getPetImageEntity()!=null) {
+            petResponse.setImageUrls(petEntity.getPetImageEntity().getImageUrls());
+        }
         return petResponse;
     }
 

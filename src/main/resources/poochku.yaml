@@ -58,6 +58,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserDto'
+    put:
+      summary: Update user account
+      operationId: update user details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+      responses:
+        '201':
+          description: User Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
   /user/{userId}:
     get:
       summary: Retrieve account details by ID

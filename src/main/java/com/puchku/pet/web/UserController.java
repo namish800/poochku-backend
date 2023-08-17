@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class SellerController implements UserApi {
+public class UserController implements UserApi {
 
     @Autowired
     private UserService userService;
@@ -22,4 +22,11 @@ public class SellerController implements UserApi {
     public ResponseEntity<UserDto> requestAccountInfo(Integer userId) {
         return userService.getUserDetails(userId);
     }
+
+    @Override
+    public ResponseEntity<UserDto> updateUserDetails(UserDto userDto) {
+        return userService.updateUserDetails(userDto);
+    }
+
+
 }

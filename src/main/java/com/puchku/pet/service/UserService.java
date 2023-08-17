@@ -43,14 +43,28 @@ public class UserService {
         if(userDto.getUserId()!=null && sellerEntity.getSellerId()!=0){
             sellerEntity.setSellerId(userDto.getUserId());
         }
-        sellerEntity.setEmail(userDto.getEmail());
-        sellerEntity.setfName(userDto.getfName());
-        sellerEntity.setlName(userDto.getlName());
+        if(StringUtils.isNotBlank(userDto.getEmail())){
+            sellerEntity.setEmail(userDto.getEmail());
+        }
+        if(StringUtils.isNotBlank(userDto.getfName())){
+            sellerEntity.setfName(userDto.getfName());
+        }
+        if(StringUtils.isNotBlank(userDto.getlName())) {
+            sellerEntity.setlName(userDto.getlName());
+        }
+        if(StringUtils.isNotBlank(userDto.getPhoneNo())) {
+            sellerEntity.setPhoneNo(userDto.getPhoneNo());
+        }
+        if(StringUtils.isNotBlank(userDto.getRole())) {
+            sellerEntity.setRoles(List.of(userDto.getRole()));
+        }
+
+        if(StringUtils.isNotBlank(userDto.getPassword())) {
+            sellerEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        }
+
         sellerEntity.setLastLogin(OffsetDateTime.now());
         sellerEntity.setCrtTs(OffsetDateTime.now());
-        sellerEntity.setPhoneNo(userDto.getPhoneNo());
-        sellerEntity.setRoles(List.of(userDto.getRole()));
-        sellerEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
     }
 
     public ResponseEntity<UserDto> getUserDetails(Integer userId) {
@@ -78,5 +92,24 @@ public class UserService {
         userDto.setfName(sellerEntity.getfName());
         userDto.setlName(sellerEntity.getlName());
         userDto.setRole(sellerEntity.getRoles().get(0));
+    }
+
+    public ResponseEntity<UserDto> updateUserDetails(UserDto userDto) {
+        if(userDto!=null && (userDto.getUserId()==0 || userDto.getUserId()==null)){
+            throw new BadRequestException("Missing user id");
+        }
+        Optional<SellerEntity> userEnityOpt = sellerRepository.findBySellerId(userDto.getUserId());
+        SellerEntity userEntity = null;
+        if(userEnityOpt.isEmpty()){
+            throw new NotFoundException("Seller not found");
+        } else {
+            userEntity = userEnityOpt.get();
+        }
+        createSellerEntityFromSellerDto(userEntity, userDto);
+        //update userEntity
+        userEntity = sellerRepository.save(userEntity);
+
+        createSellerDtoFromSellerEntity(userEntity, userDto);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 }

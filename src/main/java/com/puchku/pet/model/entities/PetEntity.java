@@ -67,8 +67,8 @@ public class PetEntity {
     @Column(name = "gender")
     private String gender;
 
-    @OneToMany(mappedBy="petEntity")
-    private List<PetImageEntity> petImageEntityList;
+    @OneToOne(mappedBy="petEntity")
+    private PetImageEntity petImageEntity;
 
     @OneToMany(mappedBy = "petEntity")
     private List<EnquiryEntity> petEnquiries;
@@ -208,12 +208,8 @@ public class PetEntity {
         this.gender = gender;
     }
 
-    public List<PetImageEntity> getPetImageEntityList() {
-        return petImageEntityList;
-    }
-
-    public void setPetImageEntityList(List<PetImageEntity> petImageEntityList) {
-        this.petImageEntityList = petImageEntityList;
+    public PetImageEntity getPetImageEntity() {
+        return petImageEntity;
     }
 
     public UserEntity getUser() {

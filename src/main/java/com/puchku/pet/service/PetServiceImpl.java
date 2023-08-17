@@ -92,6 +92,7 @@ public class PetServiceImpl {
 //                .map(this::mapPetServiceEntityToPetService)
 //                .toList();
         petResponse.setService(mapPetServiceEntityToPetService(petEntity.getService()));
+        petResponse.setImageUrls(petEntity.getPetImageEntity().getImageUrls());
         return petResponse;
     }
 

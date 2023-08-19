@@ -296,6 +296,119 @@ paths:
           description: Not Found
         '400':
           description: Bad Request. Missing required parameters
+  /swipe:
+    post:
+      summary: Record a swipe action and check for matches
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SwipeRequestDto'
+      responses:
+        '201':
+          description: Swipe action recorded successfully or matched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SwipeResponseDto'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+                  details:
+                    type: string
+                    example: Missing or invalid swiperId or targetId
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: User not found
+                  details:
+                    type: string
+                    example: The user with ID 123 or 456 does not exist
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+                  details:
+                    type: string
+                    example: An unexpected error occurred while recording the swipe action
+  /swipe/{petId}:
+    get:
+      summary: Returns list of swipes with status
+      operationId: getSwipesList
+      parameters:
+        - name: petId
+          in: path
+          description: ID of the pet
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Swipe action recorded successfully or matched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSwipeResponseDto'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+                  details:
+                    type: string
+                    example: Missing or invalid petId
+        '404':
+          description: Pet not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Pet not found
+                  details:
+                    type: string
+                    example: The pet with ID 123 or 456 does not exist
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+                  details:
+                    type: string
+                    example: An unexpected error occurred while retrieving swipes
+
 components:
   schemas:
     UserDto:
@@ -482,3 +595,56 @@ components:
           type: array
           items:
             type: string
+    SwipeRequestDto:
+      type: object
+      properties:
+        swiperId:
+          type: integer
+          example: 123
+        targetId:
+          type: integer
+          example: 456
+    SwipeResponseDto:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Matched!
+        isMatch:
+          type: boolean
+          example: true
+        match:
+          type: object
+          properties:
+            swiperId:
+              type: long
+              example: 123
+            targetId:
+              type: long
+              example: 456
+            matchSwipeId:
+              type: long
+              example: 789
+    UserSwipeResponseDto:
+      type: object
+      properties:
+        pendingFromSwiper:
+          type: array
+          items:
+            $ref: '#/components/schemas/PetSwipeDto'
+        pendingFromTarget:
+          type: array
+          items:
+            $ref: '#/components/schemas/PetSwipeDto'
+        accepted:
+          type: array
+          items:
+            $ref: '#/components/schemas/PetSwipeDto'
+    PetSwipeDto:
+      type: object
+      properties:
+        swipeId:
+          type: long
+          example: 123
+        petDetails:
+          $ref: '#/components/schemas/Pet'

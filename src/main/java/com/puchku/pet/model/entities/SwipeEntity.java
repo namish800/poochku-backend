@@ -2,7 +2,8 @@ package com.puchku.pet.model.entities;
 
 import jakarta.persistence.*;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
+import java.time.Instant;
 
 @Entity
 @Table(name = "Swipe", schema="poochku")
@@ -35,12 +36,16 @@ public class SwipeEntity {
     }
 
     // Parameterized constructor
-    public SwipeEntity(PetEntity swiper, PetEntity target, String direction, Timestamp createdAt, String status) {
+    public SwipeEntity(PetEntity swiper, PetEntity target, String direction, String status) {
         this.swiper = swiper;
         this.target = target;
         this.direction = direction;
-        this.createdAt = createdAt;
         this.status = status;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = Timestamp.from(Instant.now());
     }
 
     public Long getSwipeId() {

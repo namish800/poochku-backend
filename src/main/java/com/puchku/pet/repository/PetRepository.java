@@ -19,4 +19,6 @@ public interface PetRepository extends JpaRepository<PetEntity, Long>, JpaSpecif
 
     Optional<PetEntity> findByPetId(long petId);
 
+    Optional<PetEntity> findByPetIdAndService_serviceCode(long petId, String code);
+
 }

@@ -9,6 +9,7 @@ import com.azure.storage.blob.models.BlockBlobItem;
 import com.azure.storage.blob.options.BlobParallelUploadOptions;
 import com.puchku.pet.enums.PetStatus;
 import com.puchku.pet.exceptions.BadRequestException;
+import com.puchku.pet.exceptions.InternalServerErrorException;
 import com.puchku.pet.exceptions.NotFoundException;
 import com.puchku.pet.model.CreateNewPetReqDto;
 import com.puchku.pet.model.CreateNewPetReqDtoImageBlobsInner;
@@ -167,6 +168,7 @@ public class PetServiceImpl {
                 imageUrls = uploadImage(petReqDto.getImageBlobs());
             } catch (Exception e){
                 logger.error("Upload Image failed with exception: ", e);
+                throw new InternalServerErrorException("Upload Image failed with exception: " + e.getMessage());
             }
             petReqDto.setImageUrls(imageUrls);
             //to reduce response size

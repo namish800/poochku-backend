@@ -23,6 +23,8 @@ import com.puchku.pet.model.entities.SellerEntity;
 import com.puchku.pet.repository.*;
 import com.puchku.pet.util.CommonUtils;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -32,6 +34,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
@@ -63,6 +66,8 @@ public class PetServiceImpl {
 
     @Value("${azure.storage.containerName}")
     private String containerName;
+
+    Logger logger = LoggerFactory.getLogger(PetServiceImpl.class);
 
     public ResponseEntity<Pet> requestPetInfo(long petId) {
         PetEntity petEntity = petRepository.findByPetId(petId)
@@ -136,10 +141,10 @@ public class PetServiceImpl {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
+    @Transactional
     public ResponseEntity<CreateNewPetReqDto> createNewPet(CreateNewPetReqDto petReqDto) {
         if(petReqDto!=null && petReqDto.getOwnerId()!=null && petReqDto.getOwnerId()==null){
-            throw new BadRequestException("Missing required owner id");
+            throw new BadRequestException("Missing requcreateired owner id");
         }
         if(petReqDto!=null) {
             //add new pet in db
@@ -156,8 +161,13 @@ public class PetServiceImpl {
             petServiceEntity.setPrice(Integer.parseInt(petReqDto.getPrice()));
             petServiceRepository.save(petServiceEntity);
 
+            List<String> imageUrls = null;
             //upload to azure blob
-            List<String> imageUrls = uploadImage(petReqDto.getImageBlobs());
+            try {
+                imageUrls = uploadImage(petReqDto.getImageBlobs());
+            } catch (Exception e){
+                logger.error("Upload Image failed with exception: ", e);
+            }
             petReqDto.setImageUrls(imageUrls);
             //to reduce response size
             petReqDto.setImageBlobs(null);

@@ -296,6 +296,58 @@ paths:
           description: Not Found
         '400':
           description: Bad Request. Missing required parameters
+  /enquiry/see-more:
+    post:
+      summary: Saves get see more enquiry to DB
+      operationId: saveSeeMoreEnquiry
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: petId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Enquiry added
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: Not Found
+        '400':
+          description: Bad Request. Missing required parameters
+  /enquiry/whatsapp-inquiry:
+    post:
+      summary: Saves get whatsapp user enquiry to DB
+      operationId: saveWhatsappEnquiry
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: petId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Enquiry added
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: Not Found
+        '400':
+          description: Bad Request. Missing required parameters
   /swipe:
     post:
       summary: Record a swipe action and check for matches

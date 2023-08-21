@@ -18,4 +18,13 @@ public class EnquiryController implements com.puchku.pet.api.EnquiryApi {
         return enquiryService.addNewEnquiry(userId, petId, EnquiryType.GET_BEST_PRICE);
     }
 
+    @Override
+    public ResponseEntity<String> saveSeeMoreEnquiry(String userId, String petId) {
+        return enquiryService.addNewEnquiry(userId, petId, EnquiryType.SEE_MORE);
+    }
+
+    @Override
+    public ResponseEntity<String> saveWhatsappEnquiry(String userId, String petId) {
+        return enquiryService.addNewEnquiry(userId, petId, EnquiryType.WHATSAPP);
+    }
 }

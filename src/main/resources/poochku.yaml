@@ -91,7 +91,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserDto'
+                $ref: '#/components/schemas/UserResponseDto'
         '404':
           description: Not Found
         '400':
@@ -446,12 +446,25 @@ components:
           type: string
         phoneNo:
           type: string
+        whatsappUrl:
+          type: string
         role:
           type: string
-        petList:
-          type: array
-          items:
-            $ref: '#/components/schemas/Pet'
+        pets:
+          type: object
+          properties:
+            pets_for_sell:
+              type: array
+              items:
+                $ref: '#/components/schemas/Pet'
+            pets_for_adoption:
+              type: array
+              items:
+                $ref: '#/components/schemas/Pet'
+            pets_for_mating:
+              type: array
+              items:
+                $ref: '#/components/schemas/Pet'
     Pet:
       type: object
       properties:

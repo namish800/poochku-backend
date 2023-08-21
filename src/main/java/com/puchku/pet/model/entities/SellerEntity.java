@@ -39,11 +39,14 @@ public class SellerEntity {
     @Column(name = "phone_no")
     private String phoneNo;
 
-    @OneToMany(mappedBy="seller")
+    @OneToMany(mappedBy="seller", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PetEntity> petEntityList;
 
-    @OneToMany(mappedBy = "sellerEntity")
+    @OneToMany(mappedBy = "sellerEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<EnquiryEntity> enquiryList;
+
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<UserSubscription> userSubscriptions;
 
     public List<PetEntity> getPetEntityList() {
         return petEntityList;
@@ -140,6 +143,14 @@ public class SellerEntity {
 
     public void setEnquiryList(List<EnquiryEntity> enquiryList) {
         this.enquiryList = enquiryList;
+    }
+
+    public List<UserSubscription> getUserSubscriptions() {
+        return userSubscriptions;
+    }
+
+    public void setUserSubscriptions(List<UserSubscription> userSubscriptions) {
+        this.userSubscriptions = userSubscriptions;
     }
 
     @Override

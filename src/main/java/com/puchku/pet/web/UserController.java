@@ -2,6 +2,7 @@ package com.puchku.pet.web;
 
 import com.puchku.pet.api.UserApi;
 import com.puchku.pet.model.UserDto;
+import com.puchku.pet.model.UserResponseDto;
 import com.puchku.pet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<UserDto> requestAccountInfo(Integer userId) {
+    public ResponseEntity<UserResponseDto> requestAccountInfo(Integer userId) {
         return userService.getUserDetails(userId);
     }
 

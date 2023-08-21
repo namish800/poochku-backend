@@ -60,4 +60,5 @@ public class CommonUtils {
         userDto.setWhatsappUrl(CommonUtils.createWhatsAppUrl(sellerEntity.getPhoneNo()));
         return userDto;
     }
+
 }

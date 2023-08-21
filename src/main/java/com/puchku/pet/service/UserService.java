@@ -1,8 +1,13 @@
 package com.puchku.pet.service;
 
+import com.puchku.pet.enums.ServiceCode;
 import com.puchku.pet.exceptions.BadRequestException;
 import com.puchku.pet.exceptions.NotFoundException;
+import com.puchku.pet.model.Pet;
 import com.puchku.pet.model.UserDto;
+import com.puchku.pet.model.UserResponseDto;
+import com.puchku.pet.model.UserResponseDtoPets;
+import com.puchku.pet.model.entities.PetEntity;
 import com.puchku.pet.model.entities.SellerEntity;
 import com.puchku.pet.repository.SellerRepository;
 import com.puchku.pet.util.CommonUtils;
@@ -16,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -68,7 +74,7 @@ public class UserService {
         sellerEntity.setCrtTs(OffsetDateTime.now());
     }
 
-    public ResponseEntity<UserDto> getUserDetails(Integer userId) {
+    public ResponseEntity<UserResponseDto> getUserDetails(Integer userId) {
         if(userId==null || userId==0){
             throw new BadRequestException("Missing seller Id");
         }
@@ -79,10 +85,46 @@ public class UserService {
         } else {
             sellerEntity = sellerEntityOpt.get();
         }
-        UserDto userDtoResponse = new UserDto();
-        createSellerDtoFromSellerEntity(sellerEntity, userDtoResponse);
+        UserResponseDto userDtoResponse = new UserResponseDto();
+        createUserResponseDtoFromSellerEntity(sellerEntity, userDtoResponse);
 
         return new ResponseEntity<>(userDtoResponse, HttpStatus.OK);
+    }
+
+    private void createUserResponseDtoFromSellerEntity(SellerEntity sellerEntity, UserResponseDto userDtoResponse) {
+        userDtoResponse.setUserId(sellerEntity.getSellerId());
+        userDtoResponse.setEmail(sellerEntity.getEmail());
+        userDtoResponse.setPhoneNo(sellerEntity.getPhoneNo());
+        userDtoResponse.setWhatsappUrl(CommonUtils.createWhatsAppUrl(sellerEntity.getPhoneNo()));
+        userDtoResponse.setfName(sellerEntity.getfName());
+        userDtoResponse.setlName(sellerEntity.getlName());
+        userDtoResponse.setRole(sellerEntity.getRoles().get(0));
+        userDtoResponse.setPets(createUserResponsePetsFromPetEntity(sellerEntity.getPetEntityList()));
+    }
+
+    private UserResponseDtoPets createUserResponsePetsFromPetEntity(List<PetEntity> petEntityList) {
+        if(petEntityList.isEmpty()) return new UserResponseDtoPets();
+
+        UserResponseDtoPets userResponseDtoPets = new UserResponseDtoPets();
+        List<Pet> pets_for_selling = petEntityList.stream()
+                .filter(x -> x.getService().getServiceCode().equalsIgnoreCase(ServiceCode.SELLING.getCode()))
+                .map(CommonUtils::mapPetEntitytoPetResponse)
+                .toList();
+
+        List<Pet> pets_for_adoption = petEntityList.stream()
+                .filter(x -> x.getService().getServiceCode().equalsIgnoreCase(ServiceCode.ADOPTION.getCode()))
+                .map(CommonUtils::mapPetEntitytoPetResponse)
+                .toList();
+
+        List<Pet> pets_for_mating = petEntityList.stream()
+                .filter(x -> x.getService().getServiceCode().equalsIgnoreCase(ServiceCode.MATING.getCode()))
+                .map(CommonUtils::mapPetEntitytoPetResponse)
+                .toList();
+
+        userResponseDtoPets.setPetsForSell(pets_for_selling);
+        userResponseDtoPets.setPetsForAdoption(pets_for_adoption);
+        userResponseDtoPets.setPetsForMating(pets_for_mating);
+        return userResponseDtoPets;
     }
 
     private void createSellerDtoFromSellerEntity(SellerEntity sellerEntity, UserDto userDto) {

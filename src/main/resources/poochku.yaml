@@ -403,6 +403,7 @@ paths:
                   details:
                     type: string
                     example: An unexpected error occurred while recording the swipe action
+
   /swipe/{petId}:
     get:
       summary: Returns list of swipes with status
@@ -460,7 +461,62 @@ paths:
                   details:
                     type: string
                     example: An unexpected error occurred while retrieving swipes
-
+  /swipe/unmatch:
+    post:
+      summary: Unmatch the users
+      operationId: unmatchUsers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnmatchRequestDto'
+      responses:
+        '201':
+          description: User successfully unmatched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnmatchResponseDto'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+                  details:
+                    type: string
+                    example: Missing or invalid swiperId or targetId
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: User not found
+                  details:
+                    type: string
+                    example: The user with ID 123 or 456 does not exist
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+                  details:
+                    type: string
+                    example: An unexpected error occurred while recording the swipe action
 components:
   schemas:
     UserDto:
@@ -713,3 +769,23 @@ components:
           example: 123
         petDetails:
           $ref: '#/components/schemas/Pet'
+
+    UnmatchRequestDto:
+      type: object
+      properties:
+        swiperId:
+          type: long
+          example: 123
+        targetId:
+          type: long
+          example: 456
+
+    UnmatchResponseDto:
+      type: object
+      properties:
+        unmatchedIds:
+          type: array
+          items:
+            type: long
+        message:
+          type: string

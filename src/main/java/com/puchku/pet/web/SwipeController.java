@@ -1,7 +1,10 @@
 package com.puchku.pet.web;
 
+import com.puchku.pet.model.*;
 import com.puchku.pet.model.SwipeRequestDto;
 import com.puchku.pet.model.SwipeResponseDto;
+import com.puchku.pet.model.UnmatchRequestDto;
+import com.puchku.pet.model.UnmatchResponseDto;
 import com.puchku.pet.model.UserSwipeResponseDto;
 import com.puchku.pet.service.SwipeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,11 @@ public class SwipeController implements com.puchku.pet.api.SwipeApi {
     @Override
     public ResponseEntity<SwipeResponseDto> swipePost(SwipeRequestDto swipeRequestDto) {
         return swipeService.recordSwipeAndMatch(swipeRequestDto);
+    }
+
+    @Override
+    public ResponseEntity<UnmatchResponseDto> unmatchUsers(UnmatchRequestDto unmatchRequestDto) {
+        return swipeService.unmatchUsers(unmatchRequestDto);
     }
 
 

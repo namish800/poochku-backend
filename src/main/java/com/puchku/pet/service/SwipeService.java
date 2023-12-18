@@ -5,16 +5,15 @@ import com.puchku.pet.enums.SwipeDirection;
 import com.puchku.pet.enums.SwipeStatus;
 import com.puchku.pet.exceptions.BadRequestException;
 import com.puchku.pet.exceptions.NotFoundException;
-import com.puchku.pet.model.*;
 import com.puchku.pet.model.PetSwipeDto;
 import com.puchku.pet.model.SwipeRequestDto;
 import com.puchku.pet.model.SwipeResponseDto;
 import com.puchku.pet.model.SwipeResponseDtoMatch;
+import com.puchku.pet.model.UnmatchRequestDto;
+import com.puchku.pet.model.UnmatchResponseDto;
 import com.puchku.pet.model.UserSwipeResponseDto;
 import com.puchku.pet.model.entities.PetEntity;
 import com.puchku.pet.model.entities.SwipeEntity;
-import com.puchku.pet.model.projections.SwipeProjection;
-import com.puchku.pet.model.projections.SwipeProjectionForTarget;
 import com.puchku.pet.repository.PetRepository;
 import com.puchku.pet.repository.SwipeRepository;
 import com.puchku.pet.util.CommonUtils;
@@ -119,4 +118,33 @@ public class SwipeService {
     }
 
 
+
+    public ResponseEntity<UnmatchResponseDto> unmatchUsers(UnmatchRequestDto unmatchRequestDto) {
+        if(unmatchRequestDto==null || unmatchRequestDto.getSwiperId()==null || unmatchRequestDto.getTargetId()==null){
+            throw new BadRequestException("Missing swiper or target id");
+        }
+
+        Optional<SwipeEntity> swiperSwipeOpt = swipeRepository.findBySwiper_petIdAndTarget_petIdAndDirectionAndStatus(unmatchRequestDto.getSwiperId(), unmatchRequestDto.getTargetId(), SwipeDirection.RIGHT.name(), SwipeStatus.ACCEPTED.name());
+        Optional<SwipeEntity> targetSwipeOpt = swipeRepository.findBySwiper_petIdAndTarget_petIdAndDirectionAndStatus(unmatchRequestDto.getTargetId(), unmatchRequestDto.getSwiperId(), SwipeDirection.RIGHT.name(), SwipeStatus.ACCEPTED.name());
+
+        if(swiperSwipeOpt.isEmpty() || targetSwipeOpt.isEmpty()){
+            throw new NotFoundException("Match not found");
+        }
+
+        SwipeEntity swiper = swiperSwipeOpt.get();
+        SwipeEntity target = targetSwipeOpt.get();
+
+        swiper.setStatus(SwipeStatus.UNMATCHED.name());
+        target.setStatus(SwipeStatus.UNMATCHED.name());
+
+        swipeRepository.save(swiper);
+        swipeRepository.save(target);
+
+        UnmatchResponseDto returnItem = new UnmatchResponseDto();
+        returnItem.addUnmatchedIdsItem(unmatchRequestDto.getSwiperId());
+        returnItem.addUnmatchedIdsItem(unmatchRequestDto.getTargetId());
+        returnItem.setMessage("Users Unmatched");
+
+        return new ResponseEntity<>(returnItem, HttpStatus.OK);
+    }
 }

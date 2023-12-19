@@ -21,4 +21,6 @@ public interface PetRepository extends JpaRepository<PetEntity, Long>, JpaSpecif
 
     Optional<PetEntity> findByPetIdAndService_serviceCode(long petId, String code);
 
+    Page<PetEntity> findByService_serviceCodeAndSeller_sellerIdNot(String serviceCode, long sellerId, Pageable pageable);
+
 }

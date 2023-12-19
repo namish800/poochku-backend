@@ -120,18 +120,25 @@ public class PetServiceImpl {
         return userDto;
     }
 
-    public ResponseEntity<com.puchku.pet.model.PaginatedPetResponseDto> getPetByService(String serviceCode, Integer page, Integer size) {
+    public ResponseEntity<com.puchku.pet.model.PaginatedPetResponseDto> getPetByService(String serviceCode, Integer page, Integer size, String userId) {
         Page<PetEntity> petEntityPage = null;
         List<PetEntity> petEntityList = new ArrayList<>();
         Pageable pageable = PageRequest.of(page, size);
         if(!StringUtils.hasLength(serviceCode)){
             throw new BadRequestException("Missing required parameters");
         }
-        petEntityPage = petRepository.findByServiceCode(serviceCode, pageable);
+        if(userId == null){
+            petEntityPage = petRepository.findByServiceCode(serviceCode, pageable);
+        } else {
+            long sellerId = Long.parseLong(userId);
+            petEntityPage = petRepository.findByService_serviceCodeAndSeller_sellerIdNot(serviceCode, sellerId, pageable);
+        }
+
         petEntityList = petEntityPage.getContent();
         if (petEntityList.isEmpty()) {
             throw new NotFoundException("No Pets Found");
         }
+
         // creating the response
         PaginatedPetResponseDto response = new PaginatedPetResponseDto();
         List<Pet> petList = petEntityList.stream().map(this::mapPetEntitytoPetResponse).collect(Collectors.toList());

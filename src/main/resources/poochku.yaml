@@ -162,6 +162,11 @@ paths:
           schema:
             type: integer
             default: 10
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: List of Pets

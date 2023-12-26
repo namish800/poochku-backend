@@ -17,4 +17,6 @@ public interface SwipeRepository extends JpaRepository<SwipeEntity, Long> {
     List<SwipeEntity> findByTarget_petIdAndStatus(long target, String status);
 
     Optional<SwipeEntity> findBySwiper_petIdAndTarget_petIdAndDirectionAndStatus(long swiper, long target, String dir, String status);
+
+    Optional<SwipeEntity> findBySwiper_petIdAndTarget_petId(long swiper, long target);
 }

@@ -53,8 +53,16 @@ public class SwipeService {
         if(target.isEmpty()){
             throw new NotFoundException("Target pet does not exist");
         }
-
-        SwipeEntity swiperSwipeEntity = new SwipeEntity(swiper.get(), target.get(), SwipeDirection.RIGHT.name(), SwipeStatus.PENDING.name());
+        SwipeEntity swiperSwipeEntity = null;
+        Optional<SwipeEntity> swiperSwipeEntityOpt = swipeRepository.findBySwiper_petIdAndTarget_petId(swiper.get().getPetId(), target.get().getPetId());
+        if(swiperSwipeEntityOpt.isPresent()) {
+            swiperSwipeEntity = swiperSwipeEntityOpt.get();
+            if(SwipeStatus.UNMATCHED.name().equalsIgnoreCase(swiperSwipeEntity.getStatus())){
+                swiperSwipeEntity.setStatus(SwipeStatus.PENDING.name());
+            }
+        } else {
+            swiperSwipeEntity = new SwipeEntity(swiper.get(), target.get(), SwipeDirection.RIGHT.name(), SwipeStatus.PENDING.name());
+        }
         swiperSwipeEntity = swipeRepository.save(swiperSwipeEntity);
 
         Optional<SwipeEntity> targetSwipeEntityOpt = swipeRepository.findBySwiper_petIdAndTarget_petIdAndDirectionAndStatus(target.get().getPetId(), swiper.get().getPetId(), SwipeDirection.RIGHT.name(), SwipeStatus.PENDING.name());

@@ -19,11 +19,6 @@ public class PetEntity {
     @JsonIgnore
     private SellerEntity seller;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName="user_id")
-    @JsonIgnore
-    private UserEntity user;
-
     @Column(name = "breed")
     private String breed;
 
@@ -210,14 +205,6 @@ public class PetEntity {
 
     public PetImageEntity getPetImageEntity() {
         return petImageEntity;
-    }
-
-    public UserEntity getUser() {
-        return user;
-    }
-
-    public void setUser(UserEntity user) {
-        this.user = user;
     }
 
     public List<EnquiryEntity> getPetEnquiries() {

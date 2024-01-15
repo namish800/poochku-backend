@@ -615,7 +615,13 @@ components:
           type: array
           items:
             type: string
-
+        statistics:
+          type: object
+          properties:
+            whatsapp_count:
+              type: int
+            view_count:
+              type: int
     PetService:
       type: object
       properties:

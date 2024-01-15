@@ -1,11 +1,16 @@
 package com.puchku.pet.util;
 
+import com.puchku.pet.enums.EnquiryType;
 import com.puchku.pet.model.Pet;
 import com.puchku.pet.model.PetService;
+import com.puchku.pet.model.PetStatistics;
 import com.puchku.pet.model.UserDto;
+import com.puchku.pet.model.entities.EnquiryEntity;
 import com.puchku.pet.model.entities.PetEntity;
 import com.puchku.pet.model.entities.PetServiceEntity;
 import com.puchku.pet.model.entities.SellerEntity;
+
+import java.util.List;
 
 public class CommonUtils {
     public static String createWhatsAppUrl(String phoneNumber) {
@@ -38,6 +43,23 @@ public class CommonUtils {
         if(petEntity.getPetImageEntity()!=null) {
             petResponse.setImageUrls(petEntity.getPetImageEntity().getImageUrls());
         }
+
+        PetStatistics petStatistics = new PetStatistics();
+        List<EnquiryEntity> enquiryEntityList = petEntity.getPetEnquiries();
+        int whatsAppCount = 0;
+        int viewCount = 0;
+        if(!enquiryEntityList.isEmpty()){
+            whatsAppCount = enquiryEntityList.stream()
+                    .filter(enquiry -> EnquiryType.WHATSAPP.name().equalsIgnoreCase(enquiry.getEnquiryType()))
+                    .toList().size();
+
+            viewCount = enquiryEntityList.stream()
+                    .filter(enquiry -> EnquiryType.SEE_MORE.name().equalsIgnoreCase(enquiry.getEnquiryType()))
+                    .toList().size();
+        }
+        petStatistics.setViewCount(viewCount);
+        petStatistics.setWhatsappCount(whatsAppCount);
+        petResponse.setStatistics(petStatistics);
         return petResponse;
     }
 

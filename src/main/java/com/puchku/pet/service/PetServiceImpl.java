@@ -166,7 +166,9 @@ public class PetServiceImpl {
             petServiceEntity.setPetEntity(petEntity);
             petServiceEntity.setServiceCode(petReqDto.getServiceCode());
             petServiceEntity.setServiceName("SELL");
-            petServiceEntity.setPrice(Integer.parseInt(petReqDto.getPrice()));
+            if(petReqDto.getPrice()!=null) {
+                petServiceEntity.setPrice(Integer.parseInt(petReqDto.getPrice()));
+            }
             petServiceRepository.save(petServiceEntity);
 
             List<String> imageUrls = null;
@@ -222,7 +224,9 @@ public class PetServiceImpl {
             petEntity.setName(petReqDto.getName());
             petEntity.setDescription(petReqDto.getDescription());
             petEntity.setPetType(petReqDto.getPetType());
-            petEntity.setAge(Integer.parseInt(petReqDto.getAgeInDays().trim()));
+            if(petReqDto.getAgeInDays()!=null) {
+                petEntity.setAge(Integer.parseInt(petReqDto.getAgeInDays().trim()));
+            }
             petEntity.setPetStatus(PetStatus.ACTIVE.toString());
             petEntity.setFatherBreed(petReqDto.getFatherBreed());
             petEntity.setMotherBreed(petReqDto.getMotherBreed());
@@ -316,11 +320,16 @@ public class PetServiceImpl {
             petServiceEntity.setPetEntity(petEntity);
             petServiceEntity.setServiceCode(petReqDto.getServiceCode());
             petServiceEntity.setServiceName("SELL");
-            petServiceEntity.setPrice(Integer.parseInt(petReqDto.getPrice()));
+            if(petReqDto.getPrice()!=null) {
+                petServiceEntity.setPrice(Integer.parseInt(petReqDto.getPrice()));
+            }
             petServiceRepository.save(petServiceEntity);
 
             //upload to azure blob
-            List<String> imageUrls = uploadImage(petReqDto.getImageBlobs());
+            List<String> imageUrls = null;
+            if(petReqDto.getImageBlobs() != null){
+                imageUrls = uploadImage(petReqDto.getImageBlobs());
+            }
             petReqDto.setImageUrls(imageUrls);
             //to reduce response size
             petReqDto.setImageBlobs(null);

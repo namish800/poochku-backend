@@ -82,7 +82,7 @@ public class PetServiceImpl {
         petResponse.setPetId(petEntity.getPetId());
         petResponse.setAge(petEntity.getAge());
         petResponse.setPetType(petEntity.getPetType());
-        petResponse.setName(petResponse.getName());
+        petResponse.setName(petEntity.getName());
         petResponse.setBreed(petEntity.getBreed());
         petResponse.setDescription(petEntity.getDescription());
         petResponse.setStatus(petEntity.getPetStatus());

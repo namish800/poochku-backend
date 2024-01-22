@@ -341,21 +341,4 @@ public class PetServiceImpl {
 
         return new ResponseEntity<>(petReqDto, HttpStatus.OK);
     }
-
-    public static void main(String[] args) {
-//        String filePath = "D:\\YT\\MaxBanner.png";
-//
-//        byte[] res = readImageAsBytes(filePath);
-//    }
-//
-//    private static byte[] readImageAsBytes(String imagePath) {
-//        try {
-//            Path path = Paths.get(imagePath);
-//            return Files.readAllBytes(path);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return new byte[0];
-        System.out.println(PetStatus.ACTIVE.toString());
-    }
 }

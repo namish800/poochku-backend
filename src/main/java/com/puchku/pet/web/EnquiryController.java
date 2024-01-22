@@ -19,6 +19,11 @@ public class EnquiryController implements com.puchku.pet.api.EnquiryApi {
     }
 
     @Override
+    public ResponseEntity<String> saveFindMeAPetEnquiry(String userId) {
+        return enquiryService.addNewEnquiry(userId, EnquiryType.FINDPET);
+    }
+
+    @Override
     public ResponseEntity<String> saveSeeMoreEnquiry(String userId, String petId) {
         return enquiryService.addNewEnquiry(userId, petId, EnquiryType.SEE_MORE);
     }
@@ -27,4 +32,5 @@ public class EnquiryController implements com.puchku.pet.api.EnquiryApi {
     public ResponseEntity<String> saveWhatsappEnquiry(String userId, String petId) {
         return enquiryService.addNewEnquiry(userId, petId, EnquiryType.WHATSAPP);
     }
+
 }

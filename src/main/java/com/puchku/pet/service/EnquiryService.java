@@ -50,4 +50,21 @@ public class EnquiryService {
         enquiryRepository.save(enquiryEntity);
         return new ResponseEntity<>("Enquiry saved successfully", HttpStatus.OK);
     }
+
+    public ResponseEntity<String> addNewEnquiry(String userId, EnquiryType enquiryType) {
+        if(StringUtils.isBlank(userId)){
+            throw new BadRequestException("Missing userId");
+        }
+        Optional<SellerEntity> sellerEntity = sellerRepository.findBySellerId(Long.parseLong(userId));
+        if(sellerEntity.isEmpty()){
+            throw new NotFoundException("User not found");
+        }
+
+        EnquiryEntity enquiryEntity = new EnquiryEntity();
+        enquiryEntity.setSellerEntity(sellerEntity.get());
+        enquiryEntity.setEnquiryType(enquiryType.name());
+
+        enquiryRepository.save(enquiryEntity);
+        return new ResponseEntity<>("Enquiry saved successfully", HttpStatus.OK);
+    }
 }

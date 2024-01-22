@@ -317,6 +317,7 @@ public class PetServiceImpl {
 
             //add the service for the pet based on service code
             PetServiceEntity petServiceEntity = new PetServiceEntity();
+            petServiceEntity.setPetServiceId(petEntity.getService().getPetServiceId());
             petServiceEntity.setPetEntity(petEntity);
             petServiceEntity.setServiceCode(petReqDto.getServiceCode());
             petServiceEntity.setServiceName("SELL");
@@ -334,6 +335,7 @@ public class PetServiceImpl {
             //to reduce response size
             petReqDto.setImageBlobs(null);
             PetImageEntity petImageEntity = new PetImageEntity();
+            petImageEntity.setPetImageId(petEntity.getPetImageEntity().getPetImageId());
             petImageEntity.setImageUrls(imageUrls);
             petImageEntity.setPetEntity(petEntity);
             petImageRepository.save(petImageEntity);

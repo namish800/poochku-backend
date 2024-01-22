@@ -11,7 +11,7 @@ public class PetImageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pet_image_id")
-    private long petId;
+    private long petImageId;
 
     @ManyToOne
     @JoinColumn(name = "pet_id", referencedColumnName="pet_id")
@@ -21,12 +21,12 @@ public class PetImageEntity {
     @Column(name = "url")
     private List<String> imageUrls;
 
-    public long getPetId() {
-        return petId;
+    public long getPetImageId() {
+        return petImageId;
     }
 
-    public void setPetId(long petId) {
-        this.petId = petId;
+    public void setPetImageId(long petImageId) {
+        this.petImageId = petImageId;
     }
 
     public PetEntity getPetEntity() {

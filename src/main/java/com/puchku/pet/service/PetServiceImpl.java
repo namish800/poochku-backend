@@ -237,33 +237,37 @@ public class PetServiceImpl {
     }
 
     public ResponseEntity<PaginatedPetResponseDto> getPetByParams(String serviceCode, String location, String breed,
-                                                                  String gender, String quality, Integer page,
+                                                                  String gender, String quality, Long userId, Integer page,
                                                                   Integer size) {
         Specification<PetEntity> spec = Specification.where(null);
         List<PetEntity> petEntityList = new ArrayList<>();
 
-        if(serviceCode!=null){
+        if(StringUtils.hasLength(serviceCode)){
             spec = spec.and((root, query, criteriaBuilder) -> {
                 return criteriaBuilder.equal(root.get("service").get("serviceCode"), serviceCode);
             });
         }
 
-        if (location != null) {
+        if (StringUtils.hasLength(location)) {
             spec = spec.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(criteriaBuilder.lower(root.get("location")), location.toLowerCase()));
         }
 
-        if (breed != null) {
+        if (StringUtils.hasLength(breed)) {
             spec = spec.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(criteriaBuilder.lower(root.get("breed")), breed.toLowerCase()));
         }
-        if (gender != null) {
+        if (StringUtils.hasLength(gender)) {
             spec = spec.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("gender"), gender));
         }
-        if (quality != null) {
+        if (StringUtils.hasLength(quality)) {
             spec = spec.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("quality"), quality));
+        }
+        if(userId != null){
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.notEqual(root.get("seller").get("sellerId"), userId));
         }
 
 //        // Executing the query

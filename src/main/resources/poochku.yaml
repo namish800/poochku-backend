@@ -251,6 +251,11 @@ paths:
           required: false
           schema:
             type: string
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: long
         - name: page
           in: query
           description: 'The page number (default: 0)'

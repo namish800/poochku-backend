@@ -1,6 +1,5 @@
 package com.puchku.pet.web;
 
-import com.puchku.pet.model.GetRatingsForSeller200Response;
 import com.puchku.pet.model.RatingDto;
 import com.puchku.pet.model.RatingListDto;
 import com.puchku.pet.model.RatingResponseDto;

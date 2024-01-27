@@ -1,5 +1,6 @@
 package com.puchku.pet.service;
 
+import com.puchku.pet.enums.SellerStatus;
 import com.puchku.pet.enums.ServiceCode;
 import com.puchku.pet.exceptions.BadRequestException;
 import com.puchku.pet.exceptions.NotFoundException;
@@ -8,6 +9,7 @@ import com.puchku.pet.model.UserDto;
 import com.puchku.pet.model.UserResponseDto;
 import com.puchku.pet.model.UserResponseDtoPets;
 import com.puchku.pet.model.entities.PetEntity;
+import com.puchku.pet.model.entities.SellerDetailsEntity;
 import com.puchku.pet.model.entities.SellerEntity;
 import com.puchku.pet.repository.SellerRepository;
 import com.puchku.pet.util.CommonUtils;
@@ -70,6 +72,12 @@ public class UserService {
             sellerEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
         }
 
+        if(userDto.getRole().equalsIgnoreCase("seller")){
+            SellerDetailsEntity sellerDetailsEntity = new SellerDetailsEntity();
+            sellerDetailsEntity.setStatus(SellerStatus.UNVERIFIED.name());
+            sellerEntity.setSellerDetailsEntity(sellerDetailsEntity);
+        }
+
         sellerEntity.setLastLogin(OffsetDateTime.now());
         sellerEntity.setCrtTs(OffsetDateTime.now());
     }
@@ -99,6 +107,13 @@ public class UserService {
         userDtoResponse.setfName(sellerEntity.getfName());
         userDtoResponse.setlName(sellerEntity.getlName());
         userDtoResponse.setRole(sellerEntity.getRoles().get(0));
+        if(sellerEntity.getSellerDetailsEntity().isPresent()) {
+            SellerDetailsEntity sellerDetailsEntity = sellerEntity.getSellerDetailsEntity().get();
+            userDtoResponse.setAddress(sellerDetailsEntity.getAddress());
+            userDtoResponse.setBio(sellerDetailsEntity.getBio());
+            userDtoResponse.setBreedersLicense(sellerDetailsEntity.getBreedersLicense());
+            userDtoResponse.setSellerStatus(sellerDetailsEntity.getStatus());
+        }
         userDtoResponse.setPets(createUserResponsePetsFromPetEntity(sellerEntity.getPetEntityList()));
     }
 

@@ -549,6 +549,56 @@ paths:
                   details:
                     type: string
                     example: An unexpected error occurred while recording the swipe action
+  /seller/{sellerId}/rating:
+    get:
+      summary: Get Ratings for a seller
+      operationId: getRatingsForSeller
+      parameters:
+        - name: sellerId
+          in: path
+          required: true
+          schema:
+            type: long
+      responses:
+        '200':
+          description: List of Rating for the seller
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RatingListDto'
+        '404':
+          description: Not Found
+        '400':
+          description: Bad Request. Missing required parameters
+    post:
+      summary: Add a rating for a seller
+      operationId: addRating
+      parameters:
+        - name: sellerId
+          in: path
+          required: true
+          schema:
+            type: long
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RatingDto'
+      responses:
+        '200':
+          description: Rating added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RatingResponseDto'
+        '400':
+          description: Bad request. Missing required parameters
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
 components:
   schemas:
     UserDto:
@@ -589,6 +639,14 @@ components:
         whatsappUrl:
           type: string
         role:
+          type: string
+        address:
+          type: string
+        bio:
+          type: string
+        breeders_license:
+          type: string
+        seller_status:
           type: string
         pets:
           type: object
@@ -827,3 +885,33 @@ components:
             type: long
         message:
           type: string
+
+    RatingDto:
+      type: object
+      properties:
+        user_id:
+          type: long
+        rating:
+          type: int
+        comment:
+          type: string
+
+    RatingResponseDto:
+      type: object
+      properties:
+        user_name:
+          type: string
+        user_id:
+          type: long
+        rating:
+          type: int
+        comment:
+          type: string
+
+    RatingListDto:
+      type: object
+      properties:
+        ratings:
+          type: array
+          items:
+            $ref: '#/components/schemas/RatingResponseDto'

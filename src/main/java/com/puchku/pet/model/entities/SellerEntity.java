@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "seller", schema="poochku")
@@ -47,6 +48,12 @@ public class SellerEntity {
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserSubscription> userSubscriptions;
+
+    @OneToOne(mappedBy = "sellerEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private SellerDetailsEntity sellerDetailsEntity;
+
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SellerRatingEntity> sellerRatingEntityList;
 
     public List<PetEntity> getPetEntityList() {
         return petEntityList;
@@ -153,6 +160,14 @@ public class SellerEntity {
         this.userSubscriptions = userSubscriptions;
     }
 
+    public Optional<SellerDetailsEntity> getSellerDetailsEntity() {
+        return Optional.ofNullable(sellerDetailsEntity);
+    }
+
+    public void setSellerDetailsEntity(SellerDetailsEntity sellerDetailsEntity) {
+        this.sellerDetailsEntity = sellerDetailsEntity;
+    }
+
     @Override
     public String toString() {
         return "UserEntity{" +
@@ -167,5 +182,13 @@ public class SellerEntity {
                 ", lastLogin=" + lastLogin +
                 ", phoneNo='" + phoneNo +
                 '}';
+    }
+
+    public List<SellerRatingEntity> getSellerRatingEntityList() {
+        return sellerRatingEntityList;
+    }
+
+    public void setSellerRatingEntityList(List<SellerRatingEntity> sellerRatingEntityList) {
+        this.sellerRatingEntityList = sellerRatingEntityList;
     }
 }

@@ -35,7 +35,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public ResponseEntity<UserDto> createUserAccount(UserDto userDto) {
-        if(userDto!=null && (StringUtils.isEmpty(userDto.getPhoneNo()) || StringUtils.isEmpty(userDto.getEmail()))) {
+        if(userDto!=null && (StringUtils.isEmpty(userDto.getPhoneNo()) && StringUtils.isEmpty(userDto.getEmail()))) {
             throw new BadRequestException("Missing phone no. or email");
         }
 
@@ -118,7 +118,6 @@ public class UserService {
     }
 
     private UserResponseDtoPets createUserResponsePetsFromPetEntity(List<PetEntity> petEntityList) {
-        if(petEntityList.isEmpty()) return new UserResponseDtoPets();
 
         UserResponseDtoPets userResponseDtoPets = new UserResponseDtoPets();
         List<Pet> pets_for_selling = petEntityList.stream()
